@@ -141,7 +141,6 @@ export default function Join() {
       const canvas = await html2canvas(certificateRef.current, {
         scale: 2,
         useCORS: true,
-        allowTaint: true,
         backgroundColor: null, // Transparent background to respect the image
         logging: true,
         onclone: (clonedDoc) => {
@@ -172,7 +171,6 @@ export default function Join() {
       toast({
         title: "فشل التحميل",
         description: "حدث خطأ أثناء إنشاء الشهادة. يرجى المحاولة مرة أخرى أو استخدام متصفح آخر.",
-        variant: "destructive"
       });
     }
   };
