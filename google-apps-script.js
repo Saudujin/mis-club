@@ -6,7 +6,7 @@
 // 5. اجعل الوصول (Who has access) = Anyone
 // 6. انسخ الرابط وضعه في ملف Join.tsx مكان "YOUR_SCRIPT_ID_HERE"
 
-const SPREADSHEET_ID = "1gR_bchDuBewbnsdBX99f01tAbUb3QhRz_qjrQvoeyvo"; // معرف الشيت الذي زودتني به
+const SPREADSHEET_ID = "1OJkym7TmTJ2xjj2r4jqUCg6b34p_WHqLmlkZk3xXm1E"; // معرف الشيت الذي زودتني به
 const SHEET_NAME = "Sheet1"; // الاسم الافتراضي للورقة الأولى، يرجى التأكد منه في ملفك
 
 function doPost(e) {
