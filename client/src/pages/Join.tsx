@@ -199,13 +199,13 @@ export default function Join() {
             </Button>
           </div>
 
-          {/* Hidden Certificate Template for Capture */}
-          <div className="absolute left-[-9999px] top-0">
+          {/* Certificate Preview */}
+          <div className="mt-8 mb-8 w-full max-w-2xl mx-auto relative rounded-xl overflow-hidden shadow-2xl border border-white/10">
              <div 
                ref={certificateRef} 
                data-certificate-container
-               className="relative w-[2000px] h-[1414px] bg-white"
-               style={{ borderColor: 'transparent' }} // Override global border color (oklch)
+               className="relative w-full aspect-[1.414/1] bg-white"
+               style={{ borderColor: 'transparent' }}
              >
                 {/* Background Image */}
                 <img 
@@ -214,15 +214,13 @@ export default function Join() {
                   className="absolute inset-0 w-full h-full object-cover"
                 />
 
-                {/* Name Overlay - Positioned based on the template example */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center pt-[120px] z-10">
+                {/* Name Overlay */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pt-[8%] z-10">
                   <h2 
-                    // REMOVED Tailwind classes that might use CSS variables with oklch
-                    // Using inline styles with standard HEX colors for html2canvas compatibility
                     style={{ 
-                      fontSize: "80px",
+                      fontSize: "4vw", // Responsive font size
                       fontWeight: "bold",
-                      color: "#001835", // Standard HEX color
+                      color: "#001835",
                       fontFamily: "'IBM Plex Sans Arabic', sans-serif",
                       textShadow: "0px 2px 4px rgba(0,0,0,0.1)",
                       textAlign: "center"

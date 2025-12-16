@@ -46,7 +46,7 @@ function HeroSection() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative hidden lg:block"
+          className="relative block mt-12 lg:mt-0"
         >
           {/* Professional Dashboard Composition */}
           <div className="relative w-full aspect-square max-w-md mx-auto">
