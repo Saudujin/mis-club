@@ -44,17 +44,17 @@
 }
 
 /* 
-  Design Philosophy: The "Data Flow" Aesthetic (Cybernetic Glassmorphism)
-  - Deep Tory Blue background
-  - Glassmorphism cards
-  - Electric Cyan highlights
-  - IBM Plex Sans Arabic typography
+  Design Philosophy: "Refined Depth" (Matte & Deep)
+  - Less Neon, More Sophistication
+  - Deep Tory Blue background with subtle gradients
+  - Matte Glassmorphism (less blur, more opacity)
+  - High contrast white text
 */
 
 :root {
   /* Brand Colors */
   --brand-blue: #024ca5; /* Tory Blue */
-  --brand-cyan: #00e5ff; /* Electric Cyan for accents */
+  --brand-cyan: #00e5ff; /* Electric Cyan (Used sparingly for accents) */
   --brand-teal: #008080; /* Secondary Brand Color */
   
   /* Theme Variables */
@@ -64,68 +64,61 @@
   --sidebar-primary: oklch(0.45 0.15 260);
   --sidebar-primary-foreground: oklch(0.98 0 0);
   
-  --chart-1: oklch(0.6 0.15 240);
-  --chart-2: oklch(0.5 0.15 250);
-  --chart-3: oklch(0.45 0.15 260);
-  --chart-4: oklch(0.4 0.15 270);
-  --chart-5: oklch(0.35 0.15 280);
+  --radius: 0.5rem; /* Slightly sharper corners for a more professional look */
   
-  --radius: 0.75rem;
-  
-  /* Dark Mode by Default for "Data Flow" aesthetic */
-  --background: oklch(0.25 0.1 260); /* Deep Blue/Black */
+  /* Dark Mode by Default */
+  --background: oklch(0.2 0.05 260); /* Deeper, less saturated blue */
   --foreground: oklch(0.98 0 0);
   
-  --card: oklch(0.3 0.05 260 / 0.4); /* Glass effect base */
+  --card: oklch(0.25 0.05 260 / 0.6); /* More opaque, less glassy */
   --card-foreground: oklch(0.98 0 0);
   
-  --popover: oklch(0.25 0.1 260);
+  --popover: oklch(0.25 0.05 260);
   --popover-foreground: oklch(0.98 0 0);
   
-  --secondary: oklch(0.35 0.05 260);
+  --secondary: oklch(0.3 0.05 260);
   --secondary-foreground: oklch(0.98 0 0);
   
-  --muted: oklch(0.35 0.05 260);
+  --muted: oklch(0.3 0.05 260);
   --muted-foreground: oklch(0.7 0.05 260);
   
-  --accent: oklch(0.4 0.1 260);
+  --accent: oklch(0.35 0.05 260);
   --accent-foreground: oklch(0.98 0 0);
   
   --destructive: oklch(0.6 0.2 20);
   --destructive-foreground: oklch(0.98 0 0);
   
-  --border: oklch(0.98 0 0 / 0.1);
-  --input: oklch(0.98 0 0 / 0.1);
+  --border: oklch(0.98 0 0 / 0.15); /* Slightly stronger borders */
+  --input: oklch(0.98 0 0 / 0.15);
   --ring: oklch(0.6 0.15 240);
   
-  --sidebar: oklch(0.25 0.1 260);
+  --sidebar: oklch(0.2 0.05 260);
   --sidebar-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.35 0.05 260);
+  --sidebar-accent: oklch(0.3 0.05 260);
   --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.98 0 0 / 0.1);
+  --sidebar-border: oklch(0.98 0 0 / 0.15);
   --sidebar-ring: oklch(0.6 0.15 240);
 }
 
 .dark {
-  /* Same as root since we are enforcing a dark theme for this aesthetic */
-  --background: oklch(0.25 0.1 260);
+  --background: oklch(0.2 0.05 260);
   --foreground: oklch(0.98 0 0);
-  --card: oklch(0.3 0.05 260 / 0.4);
+  --card: oklch(0.25 0.05 260 / 0.6);
   --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.25 0.1 260);
+  --popover: oklch(0.25 0.05 260);
   --popover-foreground: oklch(0.98 0 0);
   --primary: oklch(0.45 0.15 260);
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.35 0.05 260);
+  --secondary: oklch(0.3 0.05 260);
   --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.35 0.05 260);
+  --muted: oklch(0.3 0.05 260);
   --muted-foreground: oklch(0.7 0.05 260);
-  --accent: oklch(0.4 0.1 260);
+  --accent: oklch(0.35 0.05 260);
   --accent-foreground: oklch(0.98 0 0);
   --destructive: oklch(0.6 0.2 20);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.98 0 0 / 0.1);
-  --input: oklch(0.98 0 0 / 0.1);
+  --border: oklch(0.98 0 0 / 0.15);
+  --input: oklch(0.98 0 0 / 0.15);
   --ring: oklch(0.6 0.15 240);
 }
 
@@ -135,19 +128,18 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    background-image: 
-      radial-gradient(circle at 50% 0%, oklch(0.35 0.1 260 / 0.4), transparent 70%),
-      radial-gradient(circle at 80% 80%, oklch(0.3 0.1 240 / 0.3), transparent 50%);
+    /* Subtle, deep gradient instead of flashy blobs */
+    background-image: linear-gradient(to bottom right, #012a5e, #001835);
     background-attachment: fixed;
   }
   
-  /* Glassmorphism Utilities */
+  /* Refined Glassmorphism */
   .glass-card {
-    @apply bg-card/40 backdrop-blur-md border border-white/10 shadow-xl;
+    @apply bg-[#024ca5]/20 backdrop-blur-sm border border-white/10 shadow-lg;
   }
   
   .glass-panel {
-    @apply bg-black/20 backdrop-blur-lg border border-white/5;
+    @apply bg-[#001835]/60 backdrop-blur-md border border-white/10;
   }
   
   /* Typography Overrides */

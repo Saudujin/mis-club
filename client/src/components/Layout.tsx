@@ -1,77 +1,108 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, Twitter, Linkedin, Instagram, Mail, MapPin, Globe } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function Navbar() {
   const [location] = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const links = [
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
     { href: "/", label: "الرئيسية" },
     { href: "/committees", label: "اللجان" },
     { href: "/join", label: "انضم إلينا" },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-lg">
-      <div className="container flex h-16 items-center justify-between">
+    <nav
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
+        isScrolled 
+          ? "bg-[#001835]/80 backdrop-blur-md border-white/10 py-3 shadow-lg" 
+          : "bg-transparent py-5"
+      )}
+    >
+      <div className="container flex items-center justify-between">
+        {/* Logo */}
         <Link href="/">
-          <a className="flex items-center gap-2 font-bold text-xl tracking-tighter text-white">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[var(--brand-cyan)] to-[var(--brand-blue)] flex items-center justify-center">
-              <span className="text-xs">MIS</span>
+          <div className="flex items-center gap-3 cursor-pointer group">
+            <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+              <img src="/MIS2#.png" alt="MIS Logo" className="w-8 h-8 object-contain" />
             </div>
-            <span>MIS Club</span>
-          </a>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-white leading-none tracking-tight">MIS Club</span>
+              <span className="text-[10px] text-white/60 tracking-widest uppercase">KSU</span>
+            </div>
+          </div>
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6">
-          {links.map((link) => (
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
             <Link key={link.href} href={link.href}>
               <a
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-[var(--brand-cyan)]",
-                  location === link.href ? "text-[var(--brand-cyan)]" : "text-white/70"
+                  "text-sm font-medium transition-colors hover:text-[var(--brand-cyan)] relative py-1",
+                  location === link.href 
+                    ? "text-[var(--brand-cyan)] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[var(--brand-cyan)]" 
+                    : "text-white/70"
                 )}
+              >
+                {link.label}
+              </a>
+            </Link>
+          ))}
+        </div>
+
+        {/* CTA Button */}
+        <div className="hidden md:block">
+          <Link href="/join">
+            <Button 
+              size="sm" 
+              className="bg-[var(--brand-blue)] hover:bg-[var(--brand-blue)]/80 text-white font-medium px-6 rounded-full border border-white/10 shadow-lg shadow-[var(--brand-blue)]/20"
+            >
+              سجل الآن
+            </Button>
+          </Link>
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <button 
+          className="md:hidden text-white p-2"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X /> : <Menu />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 right-0 bg-[#001835] border-b border-white/10 p-4 space-y-4 shadow-2xl">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href}>
+              <a 
+                className="block p-3 text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.label}
               </a>
             </Link>
           ))}
           <Link href="/join">
-            <Button size="sm" className="bg-[var(--brand-blue)] hover:bg-[var(--brand-blue)]/80 text-white border-none">
+            <Button className="w-full bg-[var(--brand-cyan)] text-black font-bold mt-4">
               سجل الآن
             </Button>
           </Link>
-        </div>
-
-        {/* Mobile Nav Toggle */}
-        <button
-          className="md:hidden text-white"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X /> : <Menu />}
-        </button>
-      </div>
-
-      {/* Mobile Nav Menu */}
-      {isOpen && (
-        <div className="md:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl p-4 flex flex-col gap-4">
-          {links.map((link) => (
-            <Link key={link.href} href={link.href}>
-              <a
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  "text-base font-medium transition-colors hover:text-[var(--brand-cyan)] block py-2",
-                  location === link.href ? "text-[var(--brand-cyan)]" : "text-white/70"
-                )}
-              >
-                {link.label}
-              </a>
-            </Link>
-          ))}
         </div>
       )}
     </nav>
@@ -80,20 +111,76 @@ export function Navbar() {
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black/40 backdrop-blur-md py-12 mt-auto">
-      <div className="container flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="text-center md:text-right">
-          <h3 className="font-bold text-lg text-white mb-2">نادي نظم المعلومات الإدارية</h3>
-          <p className="text-white/60 text-sm">
-            صُنع بحب من الرياض ❤️
-          </p>
+    <footer className="bg-[#000a15] border-t border-white/5 pt-16 pb-8">
+      <div className="container">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+          {/* Brand Column */}
+          <div className="col-span-1 md:col-span-1 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center">
+                <img src="/MIS2#.png" alt="MIS Logo" className="w-8 h-8 object-contain" />
+              </div>
+              <span className="text-xl font-bold text-white">MIS Club</span>
+            </div>
+            <p className="text-white/50 text-sm leading-relaxed">
+              نادي طلابي في جامعة الملك سعود يهتم بتطوير مهارات الطلاب في مجال نظم المعلومات الإدارية والتقنية.
+            </p>
+          </div>
+
+          {/* Quick Links */}
+          <div className="space-y-4">
+            <h3 className="text-white font-bold text-lg">روابط سريعة</h3>
+            <ul className="space-y-2">
+              <li><Link href="/"><a className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الرئيسية</a></Link></li>
+              <li><Link href="/committees"><a className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">اللجان والوحدات</a></Link></li>
+              <li><Link href="/join"><a className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">انضم إلينا</a></Link></li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div className="space-y-4">
+            <h3 className="text-white font-bold text-lg">تواصل معنا</h3>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3 text-white/60 text-sm">
+                <Mail size={16} className="text-[var(--brand-cyan)]" />
+                <span>misclub@ksu.edu.sa</span>
+              </li>
+              <li className="flex items-center gap-3 text-white/60 text-sm">
+                <MapPin size={16} className="text-[var(--brand-cyan)]" />
+                <span>جامعة الملك سعود، كلية إدارة الأعمال</span>
+              </li>
+              <li className="flex items-center gap-3 text-white/60 text-sm">
+                <Globe size={16} className="text-[var(--brand-cyan)]" />
+                <span>www.misclub.ksu.edu.sa</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Social Media */}
+          <div className="space-y-4">
+            <h3 className="text-white font-bold text-lg">تابعنا</h3>
+            <div className="flex gap-3">
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+                <Twitter size={18} />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+                <Linkedin size={18} />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+                <Instagram size={18} />
+              </a>
+            </div>
+          </div>
         </div>
-        
-        <div className="flex gap-4">
-          {/* Social Links Placeholders */}
-          <a href="#" className="text-white/60 hover:text-[var(--brand-cyan)] transition-colors">Twitter (X)</a>
-          <a href="#" className="text-white/60 hover:text-[var(--brand-cyan)] transition-colors">LinkedIn</a>
-          <a href="#" className="text-white/60 hover:text-[var(--brand-cyan)] transition-colors">YouTube</a>
+
+        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-white/30 text-sm">
+            © {new Date().getFullYear()} نادي نظم المعلومات الإدارية - جامعة الملك سعود. جميع الحقوق محفوظة.
+          </p>
+          <div className="flex gap-6 text-white/30 text-sm">
+            <a href="#" className="hover:text-white transition-colors">سياسة الخصوصية</a>
+            <a href="#" className="hover:text-white transition-colors">شروط الاستخدام</a>
+          </div>
         </div>
       </div>
     </footer>
@@ -102,9 +189,9 @@ export function Footer() {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col font-sans" dir="rtl">
+    <div className="min-h-screen flex flex-col bg-[var(--background)] font-sans text-right" dir="rtl">
       <Navbar />
-      <main className="flex-1 pt-16">
+      <main className="flex-grow pt-16">
         {children}
       </main>
       <Footer />

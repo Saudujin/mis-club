@@ -10,8 +10,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, Loader2, Download, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { jsPDF } from "jspdf";
 
 // Form Schema
 const formSchema = z.object({
@@ -46,6 +47,7 @@ export default function Join() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submittedData, setSubmittedData] = useState<FormData | null>(null);
   const { toast } = useToast();
 
   const { register, handleSubmit, watch, setValue, trigger, formState: { errors } } = useForm<FormData>({
@@ -71,15 +73,74 @@ export default function Join() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
-    // Simulate API call
+    
+    // Simulate Google Sheets API call
+    // In a real app, you would send this data to your backend or Google Sheets API
+    console.log("Sending data to Google Sheets:", data);
+    
     await new Promise(resolve => setTimeout(resolve, 2000));
-    console.log(data);
+    
+    setSubmittedData(data);
     setIsSubmitting(false);
     setIsSuccess(true);
     toast({
-      title: "تم التسجيل بنجاح! 🎉",
-      description: "سنتواصل معك قريباً.",
+      title: "تم التسجيل بنجاح",
+      description: "تم حفظ بياناتك بنجاح، يمكنك الآن تحميل شهادة التسجيل.",
     });
+  };
+
+  const generateCertificate = () => {
+    if (!submittedData) return;
+
+    const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "mm",
+      format: "a4"
+    });
+
+    // Background
+    doc.setFillColor(2, 76, 165); // Tory Blue
+    doc.rect(0, 0, 297, 210, "F");
+    
+    // Inner Border
+    doc.setDrawColor(255, 255, 255);
+    doc.setLineWidth(2);
+    doc.rect(10, 10, 277, 190);
+
+    // Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(40);
+    doc.text("شهادة تسجيل", 148.5, 60, { align: "center" });
+
+    // Subtitle
+    doc.setFontSize(20);
+    doc.text("نادي نظم المعلومات الإدارية - جامعة الملك سعود", 148.5, 80, { align: "center" });
+
+    // Content
+    doc.setFontSize(16);
+    doc.text(`يشهد النادي بأن الطالب/ة: ${submittedData.fullName}`, 148.5, 110, { align: "center" });
+    doc.text(`قد أتم/ت عملية التسجيل المبدئي للانضمام إلى: ${getCommitteeName(submittedData.committee)}`, 148.5, 125, { align: "center" });
+    
+    doc.text("نشكر لكم اهتمامكم وحرصكم على تطوير مهاراتكم", 148.5, 150, { align: "center" });
+    doc.text("سيتم التواصل معكم قريباً لإكمال إجراءات القبول", 148.5, 160, { align: "center" });
+
+    // Date
+    const date = new Date().toLocaleDateString('ar-SA');
+    doc.setFontSize(12);
+    doc.text(`تاريخ التسجيل: ${date}`, 20, 190);
+
+    doc.save("MIS-Club-Certificate.pdf");
+  };
+
+  const getCommitteeName = (key: string) => {
+    const map: Record<string, string> = {
+      relations: "لجنة العلاقات",
+      hr: "لجنة الموارد البشرية",
+      admin: "اللجنة الإدارية والمالية",
+      media: "لجنة الإعلام",
+      logistics: "لجنة اللوجستيات"
+    };
+    return map[key] || key;
   };
 
   const toggleSkill = (skill: string) => {
@@ -93,21 +154,35 @@ export default function Join() {
 
   if (isSuccess) {
     return (
-      <div className="container py-20 flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
+      <div className="container py-20 flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8">
         <motion.div 
           initial={{ scale: 0 }} 
           animate={{ scale: 1 }} 
-          className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center text-green-500"
+          className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 border border-green-500/30"
         >
           <CheckCircle2 size={48} />
         </motion.div>
-        <h2 className="text-3xl font-bold text-white">تم التسجيل بنجاح 🎉</h2>
-        <p className="text-white/60 max-w-md">
-          شكرًا لك على اهتمامك بالانضمام إلى نادي MIS. سيتم التواصل معك قريبًا بعد مراجعة الطلب.
-        </p>
-        <Button className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80">
-          تحميل شهادة اهتمام
-        </Button>
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold text-white">تم التسجيل بنجاح</h2>
+          <p className="text-white/60 max-w-md mx-auto">
+            شكرًا لك على اهتمامك بالانضمام إلى نادي MIS. تم استلام طلبك بنجاح وسيتم مراجعته من قبل الفريق المختص.
+          </p>
+        </div>
+        
+        <div className="p-6 bg-white/5 rounded-xl border border-white/10 max-w-md w-full space-y-4">
+          <div className="flex items-center gap-4 text-right">
+            <div className="w-10 h-10 rounded-lg bg-[var(--brand-blue)]/20 flex items-center justify-center text-[var(--brand-cyan)]">
+              <FileText size={20} />
+            </div>
+            <div>
+              <div className="font-bold text-white">شهادة التسجيل</div>
+              <div className="text-xs text-white/50">وثيقة إثبات تسجيل مبدئي</div>
+            </div>
+          </div>
+          <Button onClick={generateCertificate} className="w-full bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 font-bold">
+            <Download className="mr-2 h-4 w-4" /> تحميل الشهادة (PDF)
+          </Button>
+        </div>
       </div>
     );
   }
@@ -115,7 +190,7 @@ export default function Join() {
   return (
     <div className="container py-12 max-w-3xl">
       <div className="mb-8 space-y-2 text-center">
-        <h1 className="text-3xl font-bold text-white">انضم إلى نادي MIS 👋</h1>
+        <h1 className="text-3xl font-bold text-white">انضم إلى نادي MIS</h1>
         <p className="text-white/60">خطوة واحدة تفصلك عن تجربة تطوير حقيقية</p>
       </div>
 
@@ -144,19 +219,19 @@ export default function Join() {
                 >
                   <div className="space-y-2">
                     <Label className="text-white">الاسم الثلاثي</Label>
-                    <Input {...register("fullName")} className="bg-white/5 border-white/10 text-white" placeholder="محمد عبدالله..." />
+                    <Input {...register("fullName")} className="bg-white/5 border-white/10 text-white focus:border-[var(--brand-cyan)]/50" placeholder="محمد عبدالله..." />
                     {errors.fullName && <p className="text-red-400 text-xs">{errors.fullName.message}</p>}
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label className="text-white">رقم الجوال</Label>
-                      <Input {...register("phone")} className="bg-white/5 border-white/10 text-white" placeholder="05xxxxxxxx" />
+                      <Input {...register("phone")} className="bg-white/5 border-white/10 text-white focus:border-[var(--brand-cyan)]/50" placeholder="05xxxxxxxx" />
                       {errors.phone && <p className="text-red-400 text-xs">{errors.phone.message}</p>}
                     </div>
                     <div className="space-y-2">
                       <Label className="text-white">البريد الإلكتروني</Label>
-                      <Input {...register("email")} className="bg-white/5 border-white/10 text-white" placeholder="example@ksu.edu.sa" />
+                      <Input {...register("email")} className="bg-white/5 border-white/10 text-white focus:border-[var(--brand-cyan)]/50" placeholder="example@ksu.edu.sa" />
                       {errors.email && <p className="text-red-400 text-xs">{errors.email.message}</p>}
                     </div>
                   </div>
@@ -164,12 +239,12 @@ export default function Join() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label className="text-white">الرقم الجامعي</Label>
-                      <Input {...register("universityId")} className="bg-white/5 border-white/10 text-white" placeholder="44xxxxxxxx" />
+                      <Input {...register("universityId")} className="bg-white/5 border-white/10 text-white focus:border-[var(--brand-cyan)]/50" placeholder="44xxxxxxxx" />
                       {errors.universityId && <p className="text-red-400 text-xs">{errors.universityId.message}</p>}
                     </div>
                     <div className="space-y-2">
                       <Label className="text-white">التخصص</Label>
-                      <Input {...register("major")} className="bg-white/5 border-white/10 text-white" placeholder="نظم معلومات إدارية" />
+                      <Input {...register("major")} className="bg-white/5 border-white/10 text-white focus:border-[var(--brand-cyan)]/50" placeholder="نظم معلومات إدارية" />
                       {errors.major && <p className="text-red-400 text-xs">{errors.major.message}</p>}
                     </div>
                   </div>
@@ -223,7 +298,7 @@ export default function Join() {
                     <Label className="text-white">كيف ممكن تساعد في تطوير النادي؟</Label>
                     <Textarea 
                       {...register("contribution")} 
-                      className="bg-white/5 border-white/10 text-white min-h-[100px]" 
+                      className="bg-white/5 border-white/10 text-white min-h-[100px] focus:border-[var(--brand-cyan)]/50" 
                       placeholder="اكتب إجابتك هنا..." 
                     />
                     {errors.contribution && <p className="text-red-400 text-xs">{errors.contribution.message}</p>}
@@ -241,7 +316,7 @@ export default function Join() {
                           onClick={() => toggleSkill(skill)}
                           className={`px-4 py-2 rounded-full text-sm cursor-pointer transition-all border ${
                             selectedSkills?.includes(skill)
-                              ? "bg-[var(--brand-cyan)] text-black border-[var(--brand-cyan)]"
+                              ? "bg-[var(--brand-cyan)] text-black border-[var(--brand-cyan)] font-medium"
                               : "bg-white/5 text-white border-white/10 hover:bg-white/10"
                           }`}
                         >
@@ -265,12 +340,12 @@ export default function Join() {
                 >
                   <div className="space-y-2">
                     <Label className="text-white">رابط السيرة الذاتية (اختياري)</Label>
-                    <Input {...register("cvUrl")} className="bg-white/5 border-white/10 text-white" placeholder="https://linkedin.com/in/..." />
+                    <Input {...register("cvUrl")} className="bg-white/5 border-white/10 text-white focus:border-[var(--brand-cyan)]/50" placeholder="https://linkedin.com/in/..." />
                     <p className="text-xs text-white/40">يمكنك وضع رابط LinkedIn أو Google Drive</p>
                   </div>
 
                   <div className="p-4 bg-[var(--brand-cyan)]/10 border border-[var(--brand-cyan)]/20 rounded-lg">
-                    <h4 className="text-[var(--brand-cyan)] font-bold mb-2">ملاحظة هامة</h4>
+                    <h4 className="text-[var(--brand-cyan)] font-bold mb-2 text-sm">ملاحظة هامة</h4>
                     <p className="text-sm text-white/70">
                       تأكد من صحة جميع البيانات المدخلة قبل الإرسال. سيتم مراجعة طلبك والتواصل معك عبر البريد الإلكتروني أو الجوال.
                     </p>
@@ -295,7 +370,7 @@ export default function Join() {
                   التالي <ChevronLeft className="mr-2 h-4 w-4" />
                 </Button>
               ) : (
-                <Button type="submit" disabled={isSubmitting} className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80">
+                <Button type="submit" disabled={isSubmitting} className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 font-bold">
                   {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : "إرسال الطلب 🚀"}
                 </Button>
               )}
