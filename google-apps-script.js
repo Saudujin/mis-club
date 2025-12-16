@@ -4,20 +4,22 @@
 // 3. الصق هذا الكود
 // 4. قم بالنشر كـ Web App (Deploy > New deployment > Web app)
 // 5. اجعل الوصول (Who has access) = Anyone
-// 6. انسخ الرابط وضعه في ملف Join.tsx
+// 6. انسخ الرابط وضعه في ملف Join.tsx مكان "YOUR_SCRIPT_ID_HERE"
 
-const SPREADSHEET_ID = "1gR_bchDuBewbnsdBX99f01tAbUb3QhRz_qjrQvoeyvo"; // معرف الشيت الخاص بك
-const SHEET_NAME = "Sheet1"; // تأكد من اسم الورقة
+const SPREADSHEET_ID = "1gR_bchDuBewbnsdBX99f01tAbUb3QhRz_qjrQvoeyvo"; // معرف الشيت الذي زودتني به
+const SHEET_NAME = "Sheet1"; // الاسم الافتراضي للورقة الأولى، يرجى التأكد منه في ملفك
 
 function doPost(e) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+
   try {
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
     
-    // إذا لم تكن الورقة موجودة، قم بإنشائها
     if (!sheet) {
       return ContentService.createTextOutput(JSON.stringify({ 
         status: "error", 
-        message: "Sheet not found" 
+        message: "Sheet not found. Please rename your sheet to 'Sheet1' or update the script." 
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
@@ -25,17 +27,16 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     
     // إضافة صف جديد بالبيانات
-    // الترتيب: الاسم، الجوال، الرقم الجامعي، التخصص، الإيميل، اللجنة، المساهمة، المهارات، رابط السيرة
     sheet.appendRow([
       new Date(), // الطابع الزمني
       data.fullName,
-      data.phone,
-      data.universityId,
+      "'" + data.phone, // إضافة فاصلة علوية لمنع تحويل الرقم لصيغة علمية
+      "'" + data.universityId,
       data.major,
       data.email,
       data.committee,
       data.contribution,
-      data.skills.join(", "), // تحويل مصفوفة المهارات لنص
+      Array.isArray(data.skills) ? data.skills.join(", ") : data.skills,
       data.cvUrl || "لا يوجد"
     ]);
 
@@ -49,22 +50,29 @@ function doPost(e) {
       status: "error", 
       message: error.toString() 
     })).setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
   }
 }
 
-// لإعداد الأعمدة في الشيت لأول مرة (اختياري)
-function setupSheet() {
+// دالة مساعدة لإعداد ترويسة الأعمدة (شغلها مرة واحدة فقط)
+function setupHeaders() {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
-  sheet.appendRow([
-    "Timestamp", 
-    "Full Name", 
-    "Phone", 
-    "University ID", 
-    "Major", 
-    "Email", 
-    "Committee", 
-    "Contribution", 
-    "Skills", 
-    "CV URL"
-  ]);
+  if (sheet) {
+    sheet.clear();
+    sheet.appendRow([
+      "Timestamp", 
+      "Full Name", 
+      "Phone", 
+      "University ID", 
+      "Major", 
+      "Email", 
+      "Committee", 
+      "Contribution", 
+      "Skills", 
+      "CV URL"
+    ]);
+    // تنسيق الترويسة
+    sheet.getRange(1, 1, 1, 10).setFontWeight("bold").setBackground("#024ca5").setFontColor("#ffffff");
+  }
 }

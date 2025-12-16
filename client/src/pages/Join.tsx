@@ -129,7 +129,8 @@ export default function Join() {
       const canvas = await html2canvas(certificateRef.current, {
         scale: 2, // Higher quality
         useCORS: true,
-        backgroundColor: "#024ca5", // Ensure background color matches
+        backgroundColor: "#024ca5", // Use hex color, avoid oklch
+        ignoreElements: (element) => false, // Capture everything
       });
 
       const imgData = canvas.toDataURL("image/png");

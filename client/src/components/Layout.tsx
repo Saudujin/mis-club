@@ -50,17 +50,17 @@ export function Navbar() {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href}>
-              <a
-                className={cn(
-                  "text-sm font-medium transition-colors hover:text-[var(--brand-cyan)] relative py-1",
-                  location === link.href 
-                    ? "text-[var(--brand-cyan)] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[var(--brand-cyan)]" 
-                    : "text-white/70"
-                )}
-              >
-                {link.label}
-              </a>
+            <Link 
+              key={link.href} 
+              href={link.href}
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-[var(--brand-cyan)] relative py-1 cursor-pointer",
+                location === link.href 
+                  ? "text-[var(--brand-cyan)] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[var(--brand-cyan)]" 
+                  : "text-white/70"
+              )}
+            >
+              {link.label}
             </Link>
           ))}
         </div>
@@ -90,13 +90,13 @@ export function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-[#001835] border-b border-white/10 p-4 space-y-4 shadow-2xl">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href}>
-              <a 
-                className="block p-3 text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.label}
-              </a>
+            <Link 
+              key={link.href} 
+              href={link.href}
+              className="block p-3 text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {link.label}
             </Link>
           ))}
           <Link href="/join">
