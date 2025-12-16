@@ -38,7 +38,7 @@ export function Navbar() {
         <Link href="/">
           <div className="flex items-center gap-3 cursor-pointer group">
             <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-              <img src="/MIS2#.png" alt="MIS Logo" className="w-8 h-8 object-contain" />
+              <img src="/mis-logo-new.svg" alt="MIS Logo" className="w-8 h-8 object-contain" />
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-bold text-white leading-none tracking-tight">MIS Club</span>
@@ -119,7 +119,7 @@ export function Footer() {
           <div className="col-span-1 md:col-span-1 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center">
-                <img src="/MIS2#.png" alt="MIS Logo" className="w-8 h-8 object-contain" />
+                <img src="/mis-logo-new.svg" alt="MIS Logo" className="w-8 h-8 object-contain" />
               </div>
               <span className="text-xl font-bold text-white">MIS Club</span>
             </div>
