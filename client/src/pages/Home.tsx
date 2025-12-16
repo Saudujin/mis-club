@@ -335,7 +335,8 @@ function ActivitiesSection() {
                 alt={act.title} 
                 className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#001835] via-[#001835]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+              {/* Mobile: Always visible gradient & text | Desktop: Visible on hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#001835] via-[#001835]/60 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                 <h3 className="text-xl font-bold text-white mb-2">{act.title}</h3>
                 <p className="text-sm text-white/80">{act.desc}</p>
               </div>

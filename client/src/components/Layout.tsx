@@ -112,73 +112,79 @@ export function Navbar() {
 
 export function Footer() {
   return (
-    <footer className="bg-[#000a15] border-t border-white/5 pt-16 pb-8">
+    <footer className="bg-[#000a15] border-t border-white/5 pt-12 pb-8">
       <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12 text-center md:text-right">
-          {/* Brand Column */}
-          <div className="col-span-1 md:col-span-1 space-y-4 flex flex-col items-center md:items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-12">
+          
+          {/* Brand Column - Full width on mobile, 4 cols on desktop */}
+          <div className="col-span-1 md:col-span-4 space-y-4 flex flex-col items-center md:items-start text-center md:text-right">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center">
                 <img src="/mis-logo-new.svg" alt="MIS Logo" className="w-8 h-8 object-contain" />
               </div>
-              <span className="text-xl font-bold text-white">MIS Club</span>
+              <div className="flex flex-col items-start">
+                <span className="text-xl font-bold text-white leading-none">MIS Club</span>
+                <span className="text-[10px] text-white/50 uppercase tracking-widest">KSU</span>
+              </div>
             </div>
-            <p className="text-white/50 text-sm leading-relaxed">
+            <p className="text-white/50 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
               نادي طلابي في جامعة الملك سعود يهتم بتطوير مهارات الطلاب في مجال نظم المعلومات الإدارية والتقنية.
             </p>
+            
+            {/* Social Media - Moved here for better mobile layout */}
+            <div className="flex gap-3 pt-2">
+              <a href="#" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+                <Twitter size={16} />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+                <Linkedin size={16} />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+                <Instagram size={16} />
+              </a>
+            </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-4">
-            <h3 className="text-white font-bold text-lg">روابط سريعة</h3>
-            <ul className="space-y-2">
-              <li><Link href="/" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الرئيسية</Link></li>
-              <li><Link href="/committees" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">اللجان والوحدات</Link></li>
-              <li><Link href="/join" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">انضم إلينا</Link></li>
-            </ul>
-          </div>
+          {/* Links & Contact - Grid on mobile, 8 cols on desktop */}
+          <div className="col-span-1 md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-8 text-center md:text-right">
+            
+            {/* Quick Links */}
+            <div className="space-y-4">
+              <h3 className="text-white font-bold text-base border-b border-white/10 pb-2 inline-block md:block md:border-none md:pb-0">روابط سريعة</h3>
+              <ul className="space-y-2 flex flex-col items-center md:items-start">
+                <li><Link href="/" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الرئيسية</Link></li>
+                <li><Link href="/board" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الهيكل الإداري</Link></li>
+                <li><Link href="/committees" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">اللجان والوحدات</Link></li>
+                <li><Link href="/join" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">انضم إلينا</Link></li>
+              </ul>
+            </div>
 
-          {/* Contact Info */}
-          <div className="space-y-4">
-            <h3 className="text-white font-bold text-lg">تواصل معنا</h3>
-            <ul className="space-y-3">
-              <li className="flex items-center justify-center md:justify-start gap-3 text-white/60 text-sm">
-                <Mail size={16} className="text-[var(--brand-cyan)]" />
-                <span>misclub@ksu.edu.sa</span>
-              </li>
-              <li className="flex items-center justify-center md:justify-start gap-3 text-white/60 text-sm">
-                <MapPin size={16} className="text-[var(--brand-cyan)]" />
-                <span>جامعة الملك سعود، كلية إدارة الأعمال</span>
-              </li>
-              <li className="flex items-center justify-center md:justify-start gap-3 text-white/60 text-sm">
-                <Globe size={16} className="text-[var(--brand-cyan)]" />
-                <span>www.misclub.ksu.edu.sa</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Social Media */}
-          <div className="space-y-4">
-            <h3 className="text-white font-bold text-lg">تابعنا</h3>
-            <div className="flex gap-3 justify-center md:justify-start">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
-                <Twitter size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
-                <Linkedin size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
-                <Instagram size={18} />
-              </a>
+            {/* Contact Info */}
+            <div className="space-y-4">
+              <h3 className="text-white font-bold text-base border-b border-white/10 pb-2 inline-block md:block md:border-none md:pb-0">تواصل معنا</h3>
+              <ul className="space-y-3 flex flex-col items-center md:items-start">
+                <li className="flex items-center gap-2 text-white/60 text-sm group">
+                  <Mail size={14} className="text-[var(--brand-cyan)] group-hover:scale-110 transition-transform" />
+                  <a href="mailto:misclub@ksu.edu.sa" className="hover:text-white transition-colors">misclub@ksu.edu.sa</a>
+                </li>
+                <li className="flex items-center gap-2 text-white/60 text-sm">
+                  <MapPin size={14} className="text-[var(--brand-cyan)]" />
+                  <span>جامعة الملك سعود، كلية إدارة الأعمال</span>
+                </li>
+                <li className="flex items-center gap-2 text-white/60 text-sm group">
+                  <Globe size={14} className="text-[var(--brand-cyan)] group-hover:scale-110 transition-transform" />
+                  <a href="https://misclub.ksu.edu.sa" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">www.misclub.ksu.edu.sa</a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-right">
-          <p className="text-white/30 text-sm">
-            © {new Date().getFullYear()} نادي نظم المعلومات الإدارية - جامعة الملك سعود. جميع الحقوق محفوظة.
+        <div className="border-t border-white/5 pt-6 flex flex-col-reverse md:flex-row justify-between items-center gap-4 text-center md:text-right">
+          <p className="text-white/30 text-xs">
+            © {new Date().getFullYear()} نادي نظم المعلومات الإدارية. جميع الحقوق محفوظة.
           </p>
-          <div className="flex gap-6 text-white/30 text-sm">
+          <div className="flex gap-6 text-white/30 text-xs">
             <a href="#" className="hover:text-white transition-colors">سياسة الخصوصية</a>
             <a href="#" className="hover:text-white transition-colors">شروط الاستخدام</a>
           </div>
