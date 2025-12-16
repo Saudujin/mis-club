@@ -132,9 +132,9 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-white font-bold text-lg">روابط سريعة</h3>
             <ul className="space-y-2">
-              <li><Link href="/"><a className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الرئيسية</a></Link></li>
-              <li><Link href="/committees"><a className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">اللجان والوحدات</a></Link></li>
-              <li><Link href="/join"><a className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">انضم إلينا</a></Link></li>
+              <li><Link href="/" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الرئيسية</Link></li>
+              <li><Link href="/committees" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">اللجان والوحدات</Link></li>
+              <li><Link href="/join" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">انضم إلينا</Link></li>
             </ul>
           </div>
 
