@@ -216,10 +216,15 @@ export default function Join() {
                 {/* Name Overlay - Positioned based on the template example */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pt-[120px] z-10">
                   <h2 
-                    className="text-[80px] font-bold text-[#001835]"
+                    // REMOVED Tailwind classes that might use CSS variables with oklch
+                    // Using inline styles with standard HEX colors for html2canvas compatibility
                     style={{ 
+                      fontSize: "80px",
+                      fontWeight: "bold",
+                      color: "#001835", // Standard HEX color
                       fontFamily: "'IBM Plex Sans Arabic', sans-serif",
-                      textShadow: "0px 2px 4px rgba(0,0,0,0.1)"
+                      textShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                      textAlign: "center"
                     }}
                   >
                     {submittedData.fullName}
