@@ -126,11 +126,33 @@ export default function Join() {
     if (!certificateRef.current || !submittedData) return;
 
     try {
+      // Wait for image to load
+      const img = certificateRef.current.querySelector('img');
+      if (img && !img.complete) {
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      }
+
+      // Small delay to ensure rendering
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       const canvas = await html2canvas(certificateRef.current, {
-        scale: 2, // Higher quality
+        scale: 2,
         useCORS: true,
-        backgroundColor: "#024ca5", // Use hex color, avoid oklch
-        ignoreElements: (element) => false, // Capture everything
+        allowTaint: true,
+        backgroundColor: null, // Transparent background to respect the image
+        logging: true,
+        onclone: (clonedDoc) => {
+          const clonedElement = clonedDoc.querySelector('[data-certificate-container]');
+          if (clonedElement instanceof HTMLElement) {
+            clonedElement.style.display = 'block';
+            clonedElement.style.position = 'absolute';
+            clonedElement.style.top = '0';
+            clonedElement.style.left = '0';
+          }
+        }
       });
 
       const imgData = canvas.toDataURL("image/png");
@@ -149,8 +171,8 @@ export default function Join() {
       console.error("Certificate generation failed:", err);
       toast({
         title: "فشل التحميل",
-        description: "حدث خطأ أثناء إنشاء الشهادة، حاول مرة أخرى.",
-        // variant: "destructive"
+        description: "حدث خطأ أثناء إنشاء الشهادة. يرجى المحاولة مرة أخرى أو استخدام متصفح آخر.",
+        variant: "destructive"
       });
     }
   };
@@ -186,18 +208,23 @@ export default function Join() {
 
           {/* Hidden Certificate Template for Capture */}
           <div className="absolute left-[-9999px] top-0">
-             <div ref={certificateRef} className="relative w-[2000px] h-[1414px]">
+             <div 
+               ref={certificateRef} 
+               data-certificate-container
+               className="relative w-[2000px] h-[1414px] bg-white"
+             >
                 {/* Background Image */}
                 <img 
                   src="/certificate-bg.png" 
                   alt="Certificate Template" 
                   className="absolute inset-0 w-full h-full object-cover"
+                  crossOrigin="anonymous"
                 />
 
                 {/* Name Overlay - Positioned based on the template example */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center pt-[120px]">
+                <div className="absolute inset-0 flex flex-col items-center justify-center pt-[120px] z-10">
                   <h2 
-                    className="text-[80px] font-bold text-[#001835] font-ibm"
+                    className="text-[80px] font-bold text-[#001835]"
                     style={{ 
                       fontFamily: "'IBM Plex Sans Arabic', sans-serif",
                       textShadow: "0px 2px 4px rgba(0,0,0,0.1)"
