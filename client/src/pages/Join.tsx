@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Check, ChevronLeft, ChevronRight, Loader2, Download, FileText } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { certificateBase64 } from "@/assets/certificateBase64";
 
 // --- Schema Definition ---
 const formSchema = z.object({
@@ -84,24 +85,18 @@ export default function Join() {
     setIsSubmitting(true);
     try {
       // 1. Send data to Google Sheets (via Apps Script)
-      // Replace with your actual Web App URL
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwc-BsWDRGMRqfg3P7QrfIOtmVaczB-upUpAeIQA9BuWi_qyOmU9Lc-1IZ3lVjM_Ngl/exec"; 
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAza4_Zed7Dselzwy2zy5z3my7Q68g4UW2b6JefQ9hD8io0d70Jh8VSiegEOx6KDLzwA/exec"; 
       
-      // Note: Since we can't easily make cross-origin POST requests to Google Apps Script from client-side without CORS issues in some browsers,
-      // we often use 'no-cors' mode which means we won't get a readable response, OR we assume success if no network error.
-      // For this demo, we'll simulate a successful fetch.
-      
-      /* 
+      // Send data using no-cors mode to avoid CORS errors
       await fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      */
 
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Small delay to ensure request is sent
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       setSubmittedData(data);
       setIsSuccess(true); // Show success screen
@@ -129,9 +124,9 @@ export default function Join() {
       // Wait for image to load
       const img = certificateRef.current.querySelector('img');
       if (img && !img.complete) {
-        await new Promise((resolve) => {
+        await new Promise((resolve, reject) => {
           img.onload = resolve;
-          img.onerror = resolve;
+          img.onerror = () => reject(new Error("فشل تحميل صورة الخلفية"));
         });
       }
 
@@ -141,8 +136,8 @@ export default function Join() {
       const canvas = await html2canvas(certificateRef.current, {
         scale: 2,
         useCORS: true,
-        backgroundColor: null, // Transparent background to respect the image
-        logging: true,
+        backgroundColor: null,
+        logging: false, // Disable logging in production
         onclone: (clonedDoc) => {
           const clonedElement = clonedDoc.querySelector('[data-certificate-container]');
           if (clonedElement instanceof HTMLElement) {
@@ -166,11 +161,11 @@ export default function Join() {
         title: "تم التحميل",
         description: "تم تحميل شهادة العضوية بنجاح.",
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error("Certificate generation failed:", err);
       toast({
         title: "فشل التحميل",
-        description: "حدث خطأ أثناء إنشاء الشهادة. يرجى المحاولة مرة أخرى أو استخدام متصفح آخر.",
+        description: `حدث خطأ: ${err.message || "يرجى المحاولة مرة أخرى"}`,
       });
     }
   };
@@ -213,10 +208,9 @@ export default function Join() {
              >
                 {/* Background Image */}
                 <img 
-                  src="/certificate-bg.png" 
+                  src={certificateBase64} 
                   alt="Certificate Template" 
                   className="absolute inset-0 w-full h-full object-cover"
-                  crossOrigin="anonymous"
                 />
 
                 {/* Name Overlay - Positioned based on the template example */}
