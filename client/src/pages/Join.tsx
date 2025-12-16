@@ -205,6 +205,7 @@ export default function Join() {
                ref={certificateRef} 
                data-certificate-container
                className="relative w-[2000px] h-[1414px] bg-white"
+               style={{ borderColor: 'transparent' }} // Override global border color (oklch)
              >
                 {/* Background Image */}
                 <img 
