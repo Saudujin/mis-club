@@ -190,11 +190,7 @@ export default function Join() {
           </p>
 
           <div className="flex justify-center gap-4 mt-8">
-            <Button onClick={generateCertificate} size="lg" className="bg-[var(--brand-cyan)] text-[#001835] hover:bg-white">
-              <Download className="ml-2 h-5 w-5" />
-              تحميل الشهادة
-            </Button>
-            <Button variant="outline" onClick={() => window.location.href = '/'} className="border-white/20 text-white hover:bg-white/10">
+            <Button variant="outline" onClick={() => window.location.href = '/'} className="border-white/20 text-white hover:bg-white/10 px-8">
               العودة للرئيسية
             </Button>
           </div>
@@ -218,7 +214,7 @@ export default function Join() {
                 <div className="absolute inset-0 flex flex-col items-center justify-center pt-[8%] z-10">
                   <h2 
                     style={{ 
-                      fontSize: "4vw", // Responsive font size
+                      fontSize: "6vw", // Increased font size significantly
                       fontWeight: "bold",
                       color: "#001835",
                       fontFamily: "'IBM Plex Sans Arabic', sans-serif",
@@ -254,11 +250,7 @@ export default function Join() {
           </p>
 
           <div className="flex justify-center gap-4 mt-8">
-            <Button onClick={generateCertificate} size="lg" className="bg-[var(--brand-cyan)] text-[#001835] hover:bg-white">
-              <Download className="ml-2 h-5 w-5" />
-              تحميل الشهادة
-            </Button>
-            <Button variant="outline" onClick={() => window.location.href = '/'} className="border-white/20 text-white hover:bg-white/10">
+            <Button variant="outline" onClick={() => window.location.href = '/'} className="border-white/20 text-white hover:bg-white/10 px-8">
               العودة للرئيسية
             </Button>
           </div>

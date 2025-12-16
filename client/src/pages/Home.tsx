@@ -10,12 +10,77 @@ import { ArrowLeft, Database, Target, Users, Briefcase, ChevronDown, Play, Rotat
 function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-      <div className="container relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="container relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        {/* Mobile: Image First, Desktop: Text First (handled by order classes) */}
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative block mt-8 lg:mt-0 order-1 lg:order-2"
+        >
+          {/* Professional Dashboard Composition */}
+          <div className="relative w-full aspect-square max-w-[280px] md:max-w-md mx-auto">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand-blue)] to-transparent rounded-xl opacity-30 blur-2xl" />
+            <div className="absolute inset-0 bg-[#001835]/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 md:p-8 flex flex-col justify-between shadow-2xl">
+              <div className="flex justify-between items-start border-b border-white/5 pb-4 md:pb-6">
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-[var(--brand-blue)]/20 flex items-center justify-center border border-[var(--brand-blue)]/30">
+                    <BarChart className="text-[var(--brand-cyan)] w-5 h-5 md:w-6 md:h-6" />
+                  </div>
+                  <div>
+                    <div className="text-xs md:text-sm text-white/50">مؤشر الأداء</div>
+                    <div className="text-lg md:text-2xl font-bold text-white">تحليل البيانات</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl md:text-4xl font-bold text-white">98%</div>
+                  <div className="text-[10px] md:text-xs text-[var(--brand-cyan)]">دقة عالية</div>
+                </div>
+              </div>
+              
+              <div className="space-y-4 md:space-y-6 py-4 md:py-6">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs md:text-sm text-white/60">
+                    <span>تحليل النظم</span>
+                    <span>85%</span>
+                  </div>
+                  <div className="h-1.5 md:h-2 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full w-[85%] bg-[var(--brand-cyan)]" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs md:text-sm text-white/60">
+                    <span>إدارة المشاريع</span>
+                    <span>92%</span>
+                  </div>
+                  <div className="h-1.5 md:h-2 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full w-[92%] bg-[var(--brand-blue)]" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 md:pt-6 border-t border-white/5">
+                <div className="flex -space-x-2 md:-space-x-3 space-x-reverse">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#001835] border-2 border-white/10 flex items-center justify-center text-[10px] md:text-xs text-white/60">
+                      <Users size={12} className="md:w-[14px] md:h-[14px]" />
+                    </div>
+                  ))}
+                </div>
+                <div className="text-xs md:text-sm text-white/60">
+                  <span className="text-white font-bold">+500</span> عضو نشط
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         <motion.div 
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-right space-y-6"
+          className="text-center lg:text-right space-y-6 order-2 lg:order-1"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[var(--brand-cyan)] text-sm font-medium mb-2">
             <Database size={14} />
@@ -42,68 +107,7 @@ function HeroSection() {
           </div>
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative block mt-12 lg:mt-0"
-        >
-          {/* Professional Dashboard Composition */}
-          <div className="relative w-full aspect-square max-w-md mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand-blue)] to-transparent rounded-xl opacity-30 blur-2xl" />
-            <div className="absolute inset-0 bg-[#001835]/80 backdrop-blur-xl border border-white/10 rounded-xl p-8 flex flex-col justify-between shadow-2xl">
-              <div className="flex justify-between items-start border-b border-white/5 pb-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-[var(--brand-blue)]/20 flex items-center justify-center border border-[var(--brand-blue)]/30">
-                    <BarChart className="text-[var(--brand-cyan)]" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-white/50">مؤشر الأداء</div>
-                    <div className="text-2xl font-bold text-white">تحليل البيانات</div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-4xl font-bold text-white">98%</div>
-                  <div className="text-xs text-[var(--brand-cyan)]">دقة عالية</div>
-                </div>
-              </div>
-              
-              <div className="space-y-6 py-6">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm text-white/60">
-                    <span>تحليل النظم</span>
-                    <span>85%</span>
-                  </div>
-                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full w-[85%] bg-[var(--brand-cyan)]" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm text-white/60">
-                    <span>إدارة المشاريع</span>
-                    <span>92%</span>
-                  </div>
-                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full w-[92%] bg-[var(--brand-blue)]" />
-                  </div>
-                </div>
-              </div>
 
-              <div className="flex items-center justify-between pt-6 border-t border-white/5">
-                <div className="flex -space-x-3 space-x-reverse">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-10 h-10 rounded-full bg-[#001835] border-2 border-white/10 flex items-center justify-center text-xs text-white/60">
-                      <Users size={14} />
-                    </div>
-                  ))}
-                </div>
-                <div className="text-sm text-white/60">
-                  <span className="text-white font-bold">+500</span> عضو نشط
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
 
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-white/30">

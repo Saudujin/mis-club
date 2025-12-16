@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Twitter, Linkedin, Instagram, Mail, MapPin, Globe } from "lucide-react";
+import { Menu, X, Twitter, Linkedin, Youtube, Mail, MapPin, Globe, MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function Navbar() {
@@ -133,14 +133,17 @@ export function Footer() {
             
             {/* Social Media - Moved here for better mobile layout */}
             <div className="flex gap-3 pt-2">
-              <a href="#" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+              <a href="https://x.com/mis_club_ksu?s=21&t=R3oyIJCfDB1J62CJotNfDQ" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
                 <Twitter size={16} />
               </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+              <a href="https://www.linkedin.com/company/misclub" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
                 <Linkedin size={16} />
               </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
-                <Instagram size={16} />
+              <a href="https://youtube.com/@mis_club?si=NRLrmBpoPuXV1dMQ" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+                <Youtube size={16} />
+              </a>
+              <a href="https://whatsapp.com/channel/0029VbBQWbJ4NVilCEkIOj2x" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
+                <MessageCircle size={16} />
               </a>
             </div>
           </div>
@@ -151,11 +154,11 @@ export function Footer() {
             {/* Quick Links */}
             <div className="space-y-4">
               <h3 className="text-white font-bold text-base border-b border-white/10 pb-2 inline-block md:block md:border-none md:pb-0">روابط سريعة</h3>
-              <ul className="space-y-2 flex flex-col items-center md:items-start">
-                <li><Link href="/" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الرئيسية</Link></li>
-                <li><Link href="/board" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الهيكل الإداري</Link></li>
-                <li><Link href="/committees" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">اللجان والوحدات</Link></li>
-                <li><Link href="/join" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">انضم إلينا</Link></li>
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 md:flex md:flex-col md:gap-y-2 md:gap-x-0">
+                <li className="text-center md:text-right"><Link href="/" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الرئيسية</Link></li>
+                <li className="text-center md:text-right"><Link href="/board" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الهيكل الإداري</Link></li>
+                <li className="text-center md:text-right"><Link href="/committees" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">اللجان والوحدات</Link></li>
+                <li className="text-center md:text-right"><Link href="/join" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">انضم إلينا</Link></li>
               </ul>
             </div>
 
