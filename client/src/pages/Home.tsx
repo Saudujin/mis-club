@@ -210,20 +210,36 @@ function GameSection() {
       }
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent | TouchEvent) => {
       const rect = canvas.getBoundingClientRect();
-      playerX = e.clientX - rect.left;
+      let clientX;
+      
+      if ('touches' in e) {
+        clientX = e.touches[0].clientX;
+        e.preventDefault(); // Prevent scrolling while playing
+      } else {
+        clientX = (e as MouseEvent).clientX;
+      }
+
+      // Scale coordinate for canvas resolution vs display size
+      const scaleX = canvas.width / rect.width;
+      playerX = (clientX - rect.left) * scaleX;
+
       // Boundary checks
       if (playerX < playerWidth / 2) playerX = playerWidth / 2;
       if (playerX > canvas.width - playerWidth / 2) playerX = canvas.width - playerWidth / 2;
     };
 
     canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('touchmove', handleMouseMove, { passive: false });
+    canvas.addEventListener('touchstart', handleMouseMove, { passive: false });
     update();
 
     return () => {
       cancelAnimationFrame(animationFrameId);
       canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('touchmove', handleMouseMove);
+      canvas.removeEventListener('touchstart', handleMouseMove);
     };
   }, [isPlaying, gameOver]);
 

@@ -186,6 +186,62 @@ export default function Join() {
 
           {/* Hidden Certificate Template for Capture */}
           <div className="absolute left-[-9999px] top-0">
+             <div ref={certificateRef} className="relative w-[2000px] h-[1414px]">
+                {/* Background Image */}
+                <img 
+                  src="/certificate-bg.png" 
+                  alt="Certificate Template" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+
+                {/* Name Overlay - Positioned based on the template example */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pt-[120px]">
+                  <h2 
+                    className="text-[80px] font-bold text-[#001835] font-ibm"
+                    style={{ 
+                      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
+                      textShadow: "0px 2px 4px rgba(0,0,0,0.1)"
+                    }}
+                  >
+                    {submittedData.fullName}
+                  </h2>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (isSuccess && submittedData) {
+    return (
+      <div className="min-h-screen pt-24 pb-12 flex flex-col items-center justify-center relative overflow-hidden">
+        <div className="container max-w-3xl text-center space-y-8 relative z-10">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
+          >
+            <Check className="w-12 h-12 text-green-400" />
+          </motion.div>
+          
+          <h1 className="text-4xl font-bold text-white">تم التسجيل بنجاح!</h1>
+          <p className="text-xl text-white/70">
+            شكراً لانضمامك إلينا يا {submittedData.fullName}.<br/>
+            يمكنك الآن تحميل بطاقة عضويتك الرقمية.
+          </p>
+
+          <div className="flex justify-center gap-4 mt-8">
+            <Button onClick={generateCertificate} size="lg" className="bg-[var(--brand-cyan)] text-[#001835] hover:bg-white">
+              <Download className="ml-2 h-5 w-5" />
+              تحميل الشهادة
+            </Button>
+            <Button variant="outline" onClick={() => window.location.href = '/'} className="border-white/20 text-white hover:bg-white/10">
+              العودة للرئيسية
+            </Button>
+          </div>
+
+          {/* Hidden Certificate Template for Capture */}
+          <div className="absolute left-[-9999px] top-0">
              <div ref={certificateRef} className="w-[1123px] h-[794px] bg-[#024ca5] relative flex flex-col items-center justify-center text-white p-20 border-[20px] border-white">
                 {/* Decorative Corners */}
                 <div className="absolute top-10 left-10 w-24 h-24 border-t-4 border-l-4 border-[var(--brand-cyan)]"></div>

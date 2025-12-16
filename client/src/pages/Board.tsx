@@ -122,7 +122,7 @@ export default function Board() {
           
           {/* Level 1: Club Leadership */}
           <div className="relative z-10">
-            <div className="flex gap-8 md:gap-16 justify-center items-center relative">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-16 justify-center items-center relative">
               {/* Horizontal Connector between President & VP */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-px bg-[var(--brand-cyan)]/30 -z-10 hidden md:block" />
               
@@ -154,7 +154,7 @@ export default function Board() {
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              className="absolute top-0 left-[10%] right-[10%] h-px bg-white/10 -z-10"
+              className="absolute top-0 left-[10%] right-[10%] h-px bg-white/10 -z-10 hidden md:block"
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 pt-8">
@@ -168,7 +168,7 @@ export default function Board() {
                   className="flex flex-col items-center relative"
                 >
                   {/* Vertical Connector from Spine */}
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-px h-8 bg-white/10" />
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-px h-8 bg-white/10 hidden md:block" />
 
                   {/* Committee Title */}
                   <div className="mb-6 text-center">

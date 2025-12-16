@@ -114,9 +114,9 @@ export function Footer() {
   return (
     <footer className="bg-[#000a15] border-t border-white/5 pt-16 pb-8">
       <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12 text-center md:text-right">
           {/* Brand Column */}
-          <div className="col-span-1 md:col-span-1 space-y-4">
+          <div className="col-span-1 md:col-span-1 space-y-4 flex flex-col items-center md:items-start">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center">
                 <img src="/mis-logo-new.svg" alt="MIS Logo" className="w-8 h-8 object-contain" />
@@ -142,15 +142,15 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-white font-bold text-lg">تواصل معنا</h3>
             <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-white/60 text-sm">
+              <li className="flex items-center justify-center md:justify-start gap-3 text-white/60 text-sm">
                 <Mail size={16} className="text-[var(--brand-cyan)]" />
                 <span>misclub@ksu.edu.sa</span>
               </li>
-              <li className="flex items-center gap-3 text-white/60 text-sm">
+              <li className="flex items-center justify-center md:justify-start gap-3 text-white/60 text-sm">
                 <MapPin size={16} className="text-[var(--brand-cyan)]" />
                 <span>جامعة الملك سعود، كلية إدارة الأعمال</span>
               </li>
-              <li className="flex items-center gap-3 text-white/60 text-sm">
+              <li className="flex items-center justify-center md:justify-start gap-3 text-white/60 text-sm">
                 <Globe size={16} className="text-[var(--brand-cyan)]" />
                 <span>www.misclub.ksu.edu.sa</span>
               </li>
@@ -160,7 +160,7 @@ export function Footer() {
           {/* Social Media */}
           <div className="space-y-4">
             <h3 className="text-white font-bold text-lg">تابعنا</h3>
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center md:justify-start">
               <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[var(--brand-cyan)] hover:text-black transition-all duration-300">
                 <Twitter size={18} />
               </a>
@@ -174,7 +174,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-right">
           <p className="text-white/30 text-sm">
             © {new Date().getFullYear()} نادي نظم المعلومات الإدارية - جامعة الملك سعود. جميع الحقوق محفوظة.
           </p>
