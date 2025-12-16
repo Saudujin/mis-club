@@ -19,6 +19,7 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/", label: "الرئيسية" },
+    { href: "/board", label: "الهيكل الإداري" },
     { href: "/committees", label: "اللجان" },
     { href: "/join", label: "انضم إلينا" },
   ];

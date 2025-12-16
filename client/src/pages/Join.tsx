@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, ChevronLeft, ChevronRight, Loader2, Download, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
 // Form Schema
 const formSchema = z.object({
@@ -49,6 +50,7 @@ export default function Join() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submittedData, setSubmittedData] = useState<FormData | null>(null);
   const { toast } = useToast();
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   const { register, handleSubmit, watch, setValue, trigger, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -74,62 +76,73 @@ export default function Join() {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     
-    // Simulate Google Sheets API call
-    // In a real app, you would send this data to your backend or Google Sheets API
-    console.log("Sending data to Google Sheets:", data);
-    
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setSubmittedData(data);
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    toast({
-      title: "تم التسجيل بنجاح",
-      description: "تم حفظ بياناتك بنجاح، يمكنك الآن تحميل شهادة التسجيل.",
-    });
+    try {
+      // Send data to Google Apps Script Webhook
+      // Replace with the user's deployed Web App URL
+      const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_PLACEHOLDER_YOUR_SCRIPT_ID_HERE/exec"; 
+      
+      // For now, we simulate success since we don't have the real script URL yet
+      // In production, uncomment the fetch call below:
+      /*
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors", // Important for Google Apps Script
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      */
+      
+      console.log("Data ready for Google Sheets:", data);
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate delay
+      
+      setSubmittedData(data);
+      setIsSubmitting(false);
+      setIsSuccess(true);
+      toast({
+        title: "تم التسجيل بنجاح",
+        description: "تم حفظ بياناتك بنجاح، يمكنك الآن تحميل شهادة التسجيل.",
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setIsSubmitting(false);
+      toast({
+        title: "حدث خطأ",
+        description: "لم نتمكن من حفظ البيانات، يرجى المحاولة مرة أخرى.",
+        // variant: "destructive"
+      });
+    }
   };
 
-  const generateCertificate = () => {
-    if (!submittedData) return;
+  const generateCertificate = async () => {
+    if (!certificateRef.current || !submittedData) return;
 
-    const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4"
-    });
+    try {
+      const canvas = await html2canvas(certificateRef.current, {
+        scale: 2, // Higher resolution
+        useCORS: true,
+        backgroundColor: null,
+      });
 
-    // Background
-    doc.setFillColor(2, 76, 165); // Tory Blue
-    doc.rect(0, 0, 297, 210, "F");
-    
-    // Inner Border
-    doc.setDrawColor(255, 255, 255);
-    doc.setLineWidth(2);
-    doc.rect(10, 10, 277, 190);
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "mm",
+        format: "a4"
+      });
 
-    // Title
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(40);
-    doc.text("شهادة تسجيل", 148.5, 60, { align: "center" });
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    // Subtitle
-    doc.setFontSize(20);
-    doc.text("نادي نظم المعلومات الإدارية - جامعة الملك سعود", 148.5, 80, { align: "center" });
-
-    // Content
-    doc.setFontSize(16);
-    doc.text(`يشهد النادي بأن الطالب/ة: ${submittedData.fullName}`, 148.5, 110, { align: "center" });
-    doc.text(`قد أتم/ت عملية التسجيل المبدئي للانضمام إلى: ${getCommitteeName(submittedData.committee)}`, 148.5, 125, { align: "center" });
-    
-    doc.text("نشكر لكم اهتمامكم وحرصكم على تطوير مهاراتكم", 148.5, 150, { align: "center" });
-    doc.text("سيتم التواصل معكم قريباً لإكمال إجراءات القبول", 148.5, 160, { align: "center" });
-
-    // Date
-    const date = new Date().toLocaleDateString('ar-SA');
-    doc.setFontSize(12);
-    doc.text(`تاريخ التسجيل: ${date}`, 20, 190);
-
-    doc.save("MIS-Club-Certificate.pdf");
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`MIS-Club-Certificate-${submittedData.universityId}.pdf`);
+    } catch (err) {
+      console.error("Certificate generation failed:", err);
+      toast({
+        title: "فشل التحميل",
+        description: "حدث خطأ أثناء إنشاء الشهادة، حاول مرة أخرى.",
+        // variant: "destructive"
+      });
+    }
   };
 
   const getCommitteeName = (key: string) => {
@@ -182,6 +195,49 @@ export default function Join() {
           <Button onClick={generateCertificate} className="w-full bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 font-bold">
             <Download className="mr-2 h-4 w-4" /> تحميل الشهادة (PDF)
           </Button>
+        </div>
+
+        {/* Hidden Certificate Template for PDF Generation */}
+        <div className="absolute left-[-9999px] top-[-9999px]">
+          <div 
+            ref={certificateRef} 
+            className="w-[1123px] h-[794px] bg-white relative flex flex-col items-center justify-center text-center p-20 border-[20px] border-[#024ca5]"
+            style={{ fontFamily: "'IBM Plex Sans Arabic', sans-serif" }}
+          >
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5 bg-[url('/MIS2#.png')] bg-center bg-no-repeat bg-contain pointer-events-none" />
+            
+            {/* Header */}
+            <div className="mb-12">
+              <img src="/MIS2#.png" alt="Logo" className="h-32 mx-auto mb-6" />
+              <h1 className="text-6xl font-bold text-[#024ca5] mb-4">شهادة تسجيل</h1>
+              <p className="text-2xl text-gray-600">نادي نظم المعلومات الإدارية - جامعة الملك سعود</p>
+            </div>
+
+            {/* Body */}
+            <div className="space-y-8 mb-16 w-full max-w-4xl">
+              <p className="text-3xl text-gray-800 leading-relaxed">
+                يشهد النادي بأن الطالب/ة
+                <br />
+                <span className="text-[#024ca5] font-bold text-4xl block my-4">{submittedData?.fullName}</span>
+                قد أتم/ت عملية التسجيل المبدئي للانضمام إلى
+                <br />
+                <span className="text-[#024ca5] font-bold text-3xl block mt-2">{submittedData && getCommitteeName(submittedData.committee)}</span>
+              </p>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-auto w-full flex justify-between items-end border-t-2 border-gray-200 pt-8">
+              <div className="text-right">
+                <p className="text-xl font-bold text-[#024ca5]">إدارة النادي</p>
+                <p className="text-gray-500 mt-1">MIS Club Management</p>
+              </div>
+              <div className="text-left">
+                <p className="text-gray-500 text-lg">تاريخ التسجيل</p>
+                <p className="text-xl font-bold text-[#024ca5]">{new Date().toLocaleDateString('en-GB')}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );

@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Join from "./pages/Join";
+import Board from "./pages/Board";
 import Committees from "./pages/Committees";
 
 function Router() {
@@ -15,6 +16,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/join" component={Join} />
+      <Route path="/board" component={Board} />
         <Route path="/committees" component={Committees} />
         <Route component={NotFound} />
       </Switch>
