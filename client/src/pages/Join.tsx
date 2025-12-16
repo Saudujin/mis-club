@@ -85,7 +85,7 @@ export default function Join() {
     try {
       // 1. Send data to Google Sheets (via Apps Script)
       // Replace with your actual Web App URL
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxqjVAKaP2eEJHjs9tjGq_ouLaR9mTQuwigf1UEa08W8DXOK1jFxAEHsiFXnwg2uI/exec"; 
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwc-BsWDRGMRqfg3P7QrfIOtmVaczB-upUpAeIQA9BuWi_qyOmU9Lc-1IZ3lVjM_Ngl/exec"; 
       
       // Note: Since we can't easily make cross-origin POST requests to Google Apps Script from client-side without CORS issues in some browsers,
       // we often use 'no-cors' mode which means we won't get a readable response, OR we assume success if no network error.
