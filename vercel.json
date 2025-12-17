@@ -4,7 +4,7 @@
   ],
   "framework": "vite",
   "buildCommand": "npm run vercel-build",
-  "outputDirectory": "dist/public",
+  "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false
 }
