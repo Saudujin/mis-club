@@ -10,6 +10,9 @@ import Join from "./pages/Join";
 import Board from "./pages/Board";
 import Committees from "./pages/Committees";
 import Events from "./pages/Events";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import SecretEditor from "./pages/SecretEditor";
 
 function Router() {
   return (
@@ -20,6 +23,9 @@ function Router() {
       <Route path="/board" component={Board} />
         <Route path="/committees" component={Committees} />
         <Route path="/events" component={Events} />
+        <Route path="/blog" component={Blog} />
+        <Route path="/blog/:id" component={BlogPost} />
+        <Route path="/secret-editor" component={SecretEditor} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

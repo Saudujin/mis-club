@@ -27,6 +27,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "الرئيسية" },
     { href: "/events", label: "الفعاليات" },
+    { href: "/blog", label: "المدونة" },
     { href: "/board", label: "الهيكل الإداري" },
     { href: "/committees", label: "اللجان" },
     { href: "/join", label: "انضم إلينا" },
@@ -170,6 +171,7 @@ export function Footer() {
                 <li className="text-center md:text-right"><Link href="/board" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الهيكل الإداري</Link></li>
                 <li className="text-center md:text-right"><Link href="/committees" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">اللجان والوحدات</Link></li>
                 <li className="text-center md:text-right"><Link href="/events" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">الفعاليات</Link></li>
+                <li className="text-center md:text-right"><Link href="/blog" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">المدونة</Link></li>
                 <li className="text-center md:text-right"><Link href="/join" className="text-white/60 hover:text-[var(--brand-cyan)] text-sm transition-colors">انضم إلينا</Link></li>
               </ul>
             </div>
