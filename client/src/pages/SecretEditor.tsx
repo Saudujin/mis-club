@@ -331,12 +331,26 @@ export default function SecretEditor() {
                 <Label>المحتوى</Label>
                 <div className="rounded-md overflow-hidden min-h-[300px] rtl-editor">
                   <style>{`
+                    .rtl-editor .w-md-editor {
+                      background-color: white !important;
+                      color: black !important;
+                    }
                     .rtl-editor .w-md-editor-text-pre, 
                     .rtl-editor .w-md-editor-text-input,
                     .rtl-editor textarea {
                       direction: rtl !important;
                       text-align: right !important;
                       font-family: 'IBM Plex Sans Arabic', sans-serif !important;
+                      font-size: 16px !important;
+                      line-height: 1.8 !important;
+                    }
+                    /* Ensure preview matches editor exactly */
+                    .rtl-editor .wmde-markdown {
+                      font-family: 'IBM Plex Sans Arabic', sans-serif !important;
+                      font-size: 16px !important;
+                      line-height: 1.8 !important;
+                      direction: rtl !important;
+                      text-align: right !important;
                     }
                     .rtl-editor .w-md-editor-toolbar li > button {
                       color: #333 !important;
