@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import MDEditor from "@uiw/react-md-editor";
 import { Octokit } from "@octokit/rest";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -188,23 +187,14 @@ export default function SecretEditor() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2" data-color-mode="light">
             <Label>المحتوى</Label>
-            <div className="bg-white text-black rounded-md overflow-hidden min-h-[300px]">
-              <ReactQuill 
-                theme="snow" 
-                value={content} 
-                onChange={setContent}
-                className="h-[250px]"
-                modules={{
-                  toolbar: [
-                    [{ 'header': [1, 2, false] }],
-                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-                    ['link', 'image'],
-                    ['clean']
-                  ],
-                }}
+            <div className="rounded-md overflow-hidden min-h-[300px]">
+              <MDEditor
+                value={content}
+                onChange={(val) => setContent(val || "")}
+                height={400}
+                preview="edit"
               />
             </div>
           </div>
