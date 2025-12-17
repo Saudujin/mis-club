@@ -8,10 +8,17 @@ export function Navbar() {
   const [location] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      
+      // Calculate scroll progress
+      const totalScroll = document.documentElement.scrollTop;
+      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scroll = `${totalScroll / windowHeight}`;
+      setScrollProgress(Number(scroll));
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -107,6 +114,9 @@ export function Navbar() {
           </Link>
         </div>
       )}
+      
+      {/* Scroll Progress Bar */}
+      <div className="absolute bottom-0 left-0 h-[2px] bg-[var(--brand-cyan)] transition-all duration-100 ease-out z-50" style={{ width: `${scrollProgress * 100}%` }} />
     </nav>
   );
 }

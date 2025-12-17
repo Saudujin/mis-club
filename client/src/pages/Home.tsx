@@ -98,7 +98,7 @@ function HeroSection() {
           </p>
           <div className="flex flex-wrap gap-4 pt-4">
             <Link href="/join">
-              <Button size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 text-lg px-8 h-14 rounded-lg font-bold">
+              <Button size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 text-lg px-8 h-14 rounded-lg font-bold btn-shine">
                 ابدأ التجربة <ArrowLeft className="mr-2 h-5 w-5" />
               </Button>
             </Link>
@@ -523,7 +523,7 @@ function CTASection() {
           هل تريد تطوير مهاراتك وصناعة أثر حقيقي؟ انضم إلينا اليوم وكن جزءاً من التغيير.
         </p>
         <Link href="/join">
-          <Button size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 text-lg px-10 py-6 rounded-lg font-bold shadow-lg shadow-[var(--brand-cyan)]/10">
+         <Button size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 text-lg px-8 h-14 rounded-lg font-bold shadow-lg shadow-[var(--brand-cyan)]/10 btn-shine">
             انضم إلى نادي MIS
           </Button>
         </Link>
