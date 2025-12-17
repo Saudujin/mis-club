@@ -1,296 +1,317 @@
-import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Database, Target, Users, Briefcase, ChevronDown, Play, RotateCcw, Shield, FileText, BarChart, HelpCircle, ArrowUp, Plus, Minus, Calendar } from "lucide-react";
-import { AnimatePresence } from "framer-motion";
-import SEO from "@/components/SEO";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Calendar, MapPin, Users, Target, Lightbulb, Rocket, ChevronRight, ChevronLeft } from "lucide-react";
+import { motion } from "framer-motion";
 import DataCatcherGame from "@/components/DataCatcherGame";
 
-// --- Components ---
+// Mock data for blog posts (in a real app, this would come from an API or CMS)
+import postsData from "../../public/posts.json";
 
-function HeroSection() {
-  return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-      <div className="container relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-        {/* Mobile: Image First, Desktop: Text First (handled by order classes) */}
-        
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative block mt-8 lg:mt-0 order-1 lg:order-2"
-        >
-          {/* Professional Dashboard Composition - Hidden on Mobile */}
-          <div className="relative w-full aspect-square max-w-[280px] md:max-w-md mx-auto hidden md:block">
-            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand-blue)] to-transparent rounded-xl opacity-30 blur-2xl" />
-            <div className="absolute inset-0 bg-[#001835]/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 md:p-8 flex flex-col justify-between shadow-2xl">
-              <div className="flex justify-between items-start border-b border-white/5 pb-4 md:pb-6">
-                <div className="flex items-center gap-3 md:gap-4">
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-[var(--brand-blue)]/20 flex items-center justify-center border border-[var(--brand-blue)]/30">
-                    <BarChart className="text-[var(--brand-cyan)] w-5 h-5 md:w-6 md:h-6" />
-                  </div>
-                  <div>
-                    <div className="text-xs md:text-sm text-white/50">مؤشر الأداء</div>
-                    <div className="text-lg md:text-2xl font-bold text-white">تحليل البيانات</div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl md:text-4xl font-bold text-white">98%</div>
-                  <div className="text-[10px] md:text-xs text-[var(--brand-cyan)]">دقة عالية</div>
-                </div>
-              </div>
-              
-              <div className="space-y-4 md:space-y-6 py-4 md:py-6">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs md:text-sm text-white/60">
-                    <span>تحليل النظم</span>
-                    <span>85%</span>
-                  </div>
-                  <div className="h-1.5 md:h-2 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full w-[85%] bg-[var(--brand-cyan)]" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs md:text-sm text-white/60">
-                    <span>إدارة المشاريع</span>
-                    <span>92%</span>
-                  </div>
-                  <div className="h-1.5 md:h-2 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full w-[92%] bg-[var(--brand-blue)]" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-4 md:pt-6 border-t border-white/5">
-                <div className="flex -space-x-2 md:-space-x-3 space-x-reverse">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#001835] border-2 border-white/10 flex items-center justify-center text-[10px] md:text-xs text-white/60">
-                      <Users size={12} className="md:w-[14px] md:h-[14px]" />
-                    </div>
-                  ))}
-                </div>
-                <div className="text-xs md:text-sm text-white/60">
-                  <span className="text-white font-bold">+500</span> عضو نشط
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center lg:text-right space-y-6 order-2 lg:order-1"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[var(--brand-cyan)] text-sm font-medium mb-2">
-            <Database size={14} />
-            نادي نظم المعلومات الإدارية
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
-            قرارات ذكية <br />
-            <span className="text-[var(--brand-cyan)]">
-              تبدأ من البيانات
-            </span>
-          </h1>
-          <p className="text-xl text-white/70 max-w-lg leading-relaxed">
-            في عالم يعتمد على السرعة والدقة، نظم المعلومات الإدارية هي الجسر بين التقنية والإدارة، ونحن في نادي MIS نصنع هذا الجسر.
-          </p>
-          <div className="flex flex-wrap gap-4 pt-4 justify-center lg:justify-start">
-            <Link href="/join">
-              <Button size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 text-lg px-8 h-14 rounded-lg font-bold btn-shine">
-                ابدأ التجربة <ArrowLeft className="mr-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 text-lg px-8 h-14 rounded-lg flex items-center" onClick={() => document.getElementById('game')?.scrollIntoView({ behavior: 'smooth' })}>
-              العب الآن <Play className="mr-2 h-5 w-5 mt-1" />
-            </Button>
-          </div>
-        </motion.div>
-
-
-      </div>
-
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-white/30 z-20">
-        <ChevronDown />
-      </div>
-    </section>
-  );
-}
-
-function StatsSection() {
-  const stats = [
-    { label: "عضو نشط", value: 500, suffix: "+", icon: Users },
-    { label: "فعالية سنوية", value: 12, suffix: "+", icon: Target },
-    { label: "ورشة عمل", value: 25, suffix: "+", icon: Briefcase },
-    { label: "شريك نجاح", value: 10, suffix: "+", icon: Shield },
-  ];
-
-  const [recentPosts, setRecentPosts] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function Home() {
+  const [posts, setPosts] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchRecentPosts = async () => {
-      try {
-        const response = await fetch('/posts.json');
-        if (response.ok) {
-          const posts = await response.json();
-          setRecentPosts(posts.slice(0, 3));
-        }
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecentPosts();
+    // Load posts from local JSON
+    // Sort by date (newest first) and take top 3
+    const sortedPosts = [...postsData].sort((a, b) => 
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    ).slice(0, 3);
+    
+    setPosts(sortedPosts);
   }, []);
 
   return (
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[var(--brand-blue)]/5" />
-      <div className="container relative z-10">
-        {/* Desktop View: Stats */}
-        <div className="hidden md:grid grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="text-center space-y-2"
-            >
-              <div className="w-12 h-12 mx-auto bg-[var(--brand-cyan)]/10 rounded-full flex items-center justify-center text-[var(--brand-cyan)] mb-4">
-                <stat.icon className="w-6 h-6" />
-              </div>
-              <div className="text-5xl font-bold text-white">
-                {stat.value}{stat.suffix}
-              </div>
-              <div className="text-white/60 font-medium text-base">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
+    <div className="min-h-screen bg-[#000B18] text-white font-sans" dir="rtl">
+      {/* Hero Section */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-[url('/hero-bg.jpg')] bg-cover bg-center opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#000B18]/80 via-[#000B18]/50 to-[#000B18]" />
+        
+        {/* Animated Shapes */}
+        <div className="absolute top-20 left-20 w-64 h-64 bg-[var(--brand-blue)]/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-[var(--brand-cyan)]/10 rounded-full blur-3xl animate-pulse delay-1000" />
 
-        {/* Mobile View: Recent Posts Carousel */}
-        <div className="md:hidden">
-          <h3 className="text-2xl font-bold text-white mb-6 text-center">أحدث المقالات</h3>
-          <div className="flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory hide-scrollbar">
-            {isLoading ? (
-              <div className="w-full text-center text-white/50">جاري التحميل...</div>
-            ) : (
-              recentPosts.map((post, index) => (
-                <Link key={post.id} href={`/blog/${post.id}`}>
-                  <div className="min-w-[280px] snap-center bg-[#001835] border border-white/10 rounded-xl overflow-hidden shadow-lg">
-                    <div className="h-32 overflow-hidden relative">
-                      <img 
-                        src={post.image} 
-                        alt={post.title} 
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#001835] to-transparent opacity-60" />
-                    </div>
-                    <div className="p-4">
-                      <div className="flex items-center gap-2 text-xs text-[var(--brand-cyan)] mb-2">
-                        <Calendar className="w-3 h-3" />
-                        {post.date}
-                      </div>
-                      <h4 className="text-white font-bold line-clamp-2 mb-2">{post.title}</h4>
-                      <p className="text-white/60 text-xs line-clamp-2">{post.excerpt}</p>
-                    </div>
+        <div className="container relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-right"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6 backdrop-blur-sm">
+              <span className="w-2 h-2 rounded-full bg-[var(--brand-cyan)] animate-pulse" />
+              <span className="text-sm font-medium text-white/80">نادي نظم المعلومات الإدارية</span>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              قرارات ذكية <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-l from-[var(--brand-cyan)] to-[var(--brand-blue)]">
+                تبدأ من البيانات
+              </span>
+            </h1>
+            
+            <p className="text-xl text-white/60 mb-8 max-w-xl leading-relaxed">
+              في عالم يعتمد على السرعة والدقة، نظم المعلومات الإدارية هي الجسر بين التقنية والإدارة، ونحن في نادي MIS نصنع هذا الجسر.
+            </p>
+            
+            <div className="flex flex-wrap gap-4">
+              <Button 
+                size="lg" 
+                className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/90 font-bold text-lg px-8 h-14"
+                onClick={() => document.getElementById('game')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                ابدأ التجربة <ArrowLeft className="mr-2 h-5 w-5" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-white/20 text-white hover:bg-white/10 font-medium text-lg px-8 h-14"
+                onClick={() => document.getElementById('game')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                العب الآن <Target className="mr-2 h-5 w-5" />
+              </Button>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative hidden lg:block"
+          >
+            {/* Abstract 3D Representation */}
+            <div className="relative w-full aspect-square">
+              <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand-blue)]/20 to-[var(--brand-cyan)]/20 rounded-full blur-3xl" />
+              <img 
+                src="/hero-graphic.svg" 
+                alt="MIS Visualization" 
+                className="relative z-10 w-full h-full object-contain drop-shadow-2xl animate-float"
+              />
+              
+              {/* Floating Cards - Hidden on mobile */}
+              <motion.div 
+                animate={{ y: [0, -20, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-10 -left-10 bg-[#001835]/90 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-xl max-w-xs hidden md:block"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm text-white/60">مؤشر الأداء</span>
+                  <div className="w-8 h-8 rounded-lg bg-[var(--brand-blue)] flex items-center justify-center">
+                    <Users className="w-4 h-4 text-white" />
                   </div>
-                </Link>
-              ))
-            )}
+                </div>
+                <div className="text-2xl font-bold text-white mb-1">تحليل البيانات</div>
+                <div className="text-[var(--brand-cyan)] text-sm font-medium">98% دقة عالية</div>
+                
+                <div className="mt-4 space-y-2">
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full w-[85%] bg-[var(--brand-cyan)] rounded-full" />
+                  </div>
+                  <div className="flex justify-between text-xs text-white/40">
+                    <span>تحليل النظم</span>
+                    <span>85%</span>
+                  </div>
+                  
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden mt-3">
+                    <div className="h-full w-[92%] bg-[var(--brand-blue)] rounded-full" />
+                  </div>
+                  <div className="flex justify-between text-xs text-white/40">
+                    <span>إدارة المشاريع</span>
+                    <span>92%</span>
+                  </div>
+                </div>
+                
+                <div className="mt-6 flex -space-x-2 space-x-reverse">
+                  {[1,2,3,4].map(i => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-white/10 border-2 border-[#001835] flex items-center justify-center text-xs text-white">
+                      <Users className="w-3 h-3" />
+                    </div>
+                  ))}
+                  <div className="w-8 h-8 rounded-full bg-[var(--brand-blue)] border-2 border-[#001835] flex items-center justify-center text-xs text-white font-bold">
+                    +500
+                  </div>
+                  <span className="mr-3 text-xs text-white/60 self-center">عضو نشط</span>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Vision, Mission, Goal Section */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Vision */}
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="bg-[#001835]/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-[var(--brand-cyan)]/50 transition-all group"
+            >
+              <div className="w-14 h-14 bg-[var(--brand-cyan)]/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[var(--brand-cyan)] transition-colors">
+                <Lightbulb className="w-7 h-7 text-[var(--brand-cyan)] group-hover:text-black transition-colors" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">الرؤية</h3>
+              <p className="text-white/70 leading-relaxed">
+                نتطلع إلى أن نصبح نادٍ رائد في جامعة الملك سعود، من خلال دعم مجتمع فني إداري قادر على المنافسة في سوق العمل، ومواكب لمتطلبات التحول الرقمي.
+              </p>
+            </motion.div>
+
+            {/* Mission */}
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="bg-[#001835]/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-[var(--brand-blue)]/50 transition-all group"
+            >
+              <div className="w-14 h-14 bg-[var(--brand-blue)]/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[var(--brand-blue)] transition-colors">
+                <Rocket className="w-7 h-7 text-[var(--brand-blue)] group-hover:text-white transition-colors" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">الرسالة</h3>
+              <p className="text-white/70 leading-relaxed">
+                توفير بيئة محفزة وغنية بالمعرفة والفرص، تُسهم في تنمية مهارات المهتمين بنظم المعلومات الإدارية، وذلك عبر المشاركة في الأنشطة، الفعاليات، والتجارب العملية.
+              </p>
+            </motion.div>
+
+            {/* Goal */}
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="bg-[#001835]/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-purple-500/50 transition-all group"
+            >
+              <div className="w-14 h-14 bg-purple-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-500 transition-colors">
+                <Target className="w-7 h-7 text-purple-500 group-hover:text-white transition-colors" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">الهدف</h3>
+              <p className="text-white/70 leading-relaxed">
+                نادي طلاب نظم المعلومات الإدارية (MIS) بجامعة الملك سعود، يهدف بشغف إلى تعزيز معرفة الطلاب ومهاراتهم، في الجوانب الأكاديمية والمهنية، وبناء جيل واعٍ تقنيًا وقادر على اتخاذ القرار.
+              </p>
+            </motion.div>
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-function VisionMissionSection() {
-  return (
-    <section className="py-20 bg-[#001225]">
-      <div className="container">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">نبذة عن النادي</h2>
-          <p className="text-white/60">About MIS Club</p>
+      {/* Impactful Activities Section */}
+      <ImpactfulActivitiesSection />
+
+      {/* Game Section */}
+      <GameSection />
+
+      {/* Latest Blog Posts Section */}
+      <section className="py-20 bg-[#000B18]">
+        <div className="container">
+          <div className="flex justify-between items-end mb-12">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">أحدث المقالات</h2>
+              <p className="text-white/60">رؤى وأفكار في عالم نظم المعلومات</p>
+            </div>
+            <Link href="/blog">
+              <Button variant="outline" className="hidden md:flex border-white/20 text-white hover:bg-white/10">
+                عرض كل المقالات <ArrowLeft className="mr-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          {/* Desktop Grid */}
+          <div className="hidden md:grid md:grid-cols-3 gap-8">
+            {posts.map((post, index) => (
+              <Link key={post.id} href={`/blog/${post.id}`}>
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="group cursor-pointer h-full flex flex-col bg-[#001835] rounded-2xl overflow-hidden border border-white/10 hover:border-[var(--brand-cyan)]/50 transition-all"
+                >
+                  <div className="aspect-video relative overflow-hidden">
+                    <img 
+                      src={post.image} 
+                      alt={post.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-white border border-white/10">
+                      {post.category}
+                    </div>
+                  </div>
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex items-center gap-2 text-sm text-white/40 mb-3">
+                      <Calendar className="w-4 h-4" />
+                      <span>{post.date}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[var(--brand-cyan)] transition-colors line-clamp-2">
+                      {post.title}
+                    </h3>
+                    <p className="text-white/60 text-sm line-clamp-3 mb-4 flex-grow">
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center text-[var(--brand-cyan)] text-sm font-medium mt-auto">
+                      اقرأ المزيد <ArrowLeft className="mr-2 w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            ))}
+          </div>
+
+          {/* Mobile Carousel (Horizontal Scroll) */}
+          <div className="md:hidden flex overflow-x-auto gap-4 pb-6 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
+            {posts.map((post, index) => (
+              <Link key={post.id} href={`/blog/${post.id}`}>
+                <div className="snap-center shrink-0 w-[85vw] flex flex-col h-full bg-[#001835] rounded-2xl overflow-hidden border border-white/10">
+                  <div className="aspect-video relative overflow-hidden">
+                    <img 
+                      src={post.image} 
+                      alt={post.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-white border border-white/10">
+                      {post.category}
+                    </div>
+                  </div>
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex items-center gap-2 text-sm text-white/40 mb-3">
+                      <Calendar className="w-4 h-4" />
+                      <span>{post.date}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2">
+                      {post.title}
+                    </h3>
+                    <p className="text-white/60 text-sm line-clamp-3 mb-4 flex-grow">
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center text-[var(--brand-cyan)] text-sm font-medium mt-auto">
+                      اقرأ المزيد <ArrowLeft className="mr-2 w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-8 text-center md:hidden">
+            <Link href="/blog">
+              <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                عرض كل المقالات <ArrowLeft className="mr-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Vision */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors text-center"
-          >
-            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center text-green-500 mb-6 mx-auto">
-              <Target className="w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-4">الرؤية</h3>
-            <p className="text-white/70 leading-relaxed">
-              نتطلع إلى أن نصبح نادٍ رائد في جامعة الملك سعود، من خلال دعم مجتمع فني إداري قادر على المنافسة في سوق العمل، ومواكب لمتطلبات التحول الرقمي.
-            </p>
-          </motion.div>
-
-          {/* Mission */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors text-center"
-          >
-            <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-500 mb-6 mx-auto">
-              <Briefcase className="w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-4">الرسالة</h3>
-            <p className="text-white/70 leading-relaxed">
-              توفير بيئة محفزة وغنية بالمعرفة والفرص، تُسهم في تنمية مهارات المهتمين بنظم المعلومات الإدارية، وذلك عبر المشاركة في الأنشطة، الفعاليات، والتجارب العملية.
-            </p>
-          </motion.div>
-
-          {/* Goal */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors text-center"
-          >
-            <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center text-purple-500 mb-6 mx-auto">
-              <Users className="w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-4">الهدف</h3>
-            <p className="text-white/70 leading-relaxed">
-              نادي طلاب نظم المعلومات الإدارية (MIS) بجامعة الملك سعود، يهدف بشغف إلى تعزيز معرفة الطلاب ومهاراتهم، في الجوانب الأكاديمية والمهنية، وبناء جيل واعٍ تقنيًا وقادر على اتخاذ القرار.
-            </p>
-          </motion.div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
 
 function ImpactfulActivitiesSection() {
   const activities = [
     {
-      title: "فعالية 1",
-      image: "/MIS1#.png",
+      title: "اللقاء التعريفي",
+      description: "لقاء تعريفي بأهداف النادي، لجانه، وخططه، مع تعريف الطلاب الجدد بتخصص نظم المعلومات الإدارية.",
+      image: "/mis1.png",
     },
     {
-      title: "فعالية 2",
-      image: "/MIS2#.png",
+      title: "الاحتفال باليوم الوطني",
+      description: "مشاركة طلابية تعكس الهوية الوطنية، وتعزز الانتماء، بروح طلابية إبداعية.",
+      image: "/mis2.png",
     },
     {
-      title: "فعالية 3",
-      image: "/MIS3#.png",
+      title: "معرض تحليل البيانات – Learn X",
+      description: "معرض تعليمي يركز على تحليل البيانات، يعرض مشاريع طلابية وتجارب عملية.",
+      image: "/mis3.png",
     }
   ];
 
@@ -309,7 +330,8 @@ function ImpactfulActivitiesSection() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Desktop Grid */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6">
           {activities.map((activity, index) => (
             <motion.div
               key={index}
@@ -324,8 +346,37 @@ function ImpactfulActivitiesSection() {
                 alt={activity.title} 
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 transition-opacity" />
+              <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform">
+                <h3 className="text-xl font-bold text-white mb-2">{activity.title}</h3>
+                <p className="text-white/80 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
+                  {activity.description}
+                </p>
+              </div>
             </motion.div>
+          ))}
+        </div>
+
+        {/* Mobile Horizontal Scroll */}
+        <div className="md:hidden flex overflow-x-auto gap-4 pb-6 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
+          {activities.map((activity, index) => (
+            <div 
+              key={index} 
+              className="snap-center shrink-0 w-[85vw] relative overflow-hidden rounded-xl aspect-[4/3] border border-white/10"
+            >
+              <img 
+                src={activity.image} 
+                alt={activity.title} 
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <h3 className="text-xl font-bold text-white mb-2">{activity.title}</h3>
+                <p className="text-white/80 text-sm">
+                  {activity.description}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
         
@@ -353,137 +404,5 @@ function GameSection() {
         <DataCatcherGame />
       </div>
     </section>
-  );
-}
-
-function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const faqs = [
-    {
-      question: "كيف يمكنني الانضمام إلى النادي؟",
-      answer: "يمكنك الانضمام بسهولة عبر الضغط على زر 'انضم إلينا' في أعلى الصفحة وتعبئة نموذج التسجيل. العضوية مفتوحة لجميع طلاب الجامعة."
-    },
-    {
-      question: "هل الدورات والورش مجانية؟",
-      answer: "نعم، معظم فعاليات وورش العمل التي يقدمها النادي مجانية تماماً للأعضاء والطلاب."
-    },
-    {
-      question: "هل أحصل على شهادة حضور؟",
-      answer: "نعم، يتم منح شهادات حضور معتمدة للمشاركين في الدورات وورش العمل والفعاليات الرئيسية."
-    },
-    {
-      question: "كيف يمكنني المشاركة في تنظيم الفعاليات؟",
-      answer: "نرحب دائماً بالمتطوعين! يمكنك الانضمام لفريق التنظيم من خلال متابعة إعلاناتنا الدورية عن فتح باب التطوع للجان المختلفة."
-    }
-  ];
-
-  return (
-    <section className="py-20 bg-[#001225]">
-      <div className="container max-w-3xl">
-        <div className="text-center mb-12 space-y-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">الأسئلة الشائعة</h2>
-          <p className="text-white/60">إجابات على أكثر الاستفسارات شيوعاً حول النادي وأنشطته</p>
-        </div>
-        
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="border border-white/10 rounded-lg overflow-hidden bg-white/5"
-            >
-              <button
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full flex items-center justify-between p-4 md:p-6 text-right hover:bg-white/5 transition-colors"
-              >
-                <span className="font-bold text-white text-lg">{faq.question}</span>
-                {openIndex === index ? (
-                  <Minus className="text-[var(--brand-cyan)] shrink-0" />
-                ) : (
-                  <Plus className="text-white/40 shrink-0" />
-                )}
-              </button>
-              <AnimatePresence>
-                {openIndex === index && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="p-4 md:p-6 pt-0 text-white/70 leading-relaxed border-t border-white/5">
-                      {faq.answer}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BackToTop() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  };
-
-  return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.button
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 p-3 bg-[var(--brand-cyan)] text-black rounded-full shadow-lg hover:bg-[var(--brand-cyan)]/80 transition-colors"
-        >
-          <ArrowUp className="w-6 h-6" />
-        </motion.button>
-      )}
-    </AnimatePresence>
-  );
-}
-
-export default function Home() {
-  return (
-    <div className="min-h-screen bg-[#000B18]">
-      <SEO 
-        title="الرئيسية" 
-        description="نادي نظم المعلومات الإدارية بجامعة الملك سعود - الجسر بين التقنية والإدارة"
-      />
-      
-      <HeroSection />
-      <StatsSection />
-      <VisionMissionSection />
-      <ImpactfulActivitiesSection />
-      <GameSection />
-      <FAQSection />
-      <BackToTop />
-    </div>
   );
 }
