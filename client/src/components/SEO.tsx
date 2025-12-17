@@ -10,7 +10,7 @@ interface SEOProps {
 export default function SEO({ 
   title = "نادي نظم المعلومات الإدارية - MIS Club", 
   description = "نادي طلابي في جامعة الملك سعود يهتم بتطوير مهارات الطلاب في مجال نظم المعلومات الإدارية والتقنية. قرارات ذكية تبدأ من البيانات.",
-  image = "/og-image.png",
+  image = "https://mis-club.vercel.app/og-image.png",
   url = "https://mis-club.vercel.app/"
 }: SEOProps) {
   const siteTitle = title === "نادي نظم المعلومات الإدارية - MIS Club" ? title : `${title} | MIS Club`;
@@ -27,14 +27,14 @@ export default function SEO({
       <meta property="og:url" content={url} />
       <meta property="og:title" content={siteTitle} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={image.startsWith("http") ? image : `https://mis-club.vercel.app${image}`} />
 
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
       <meta property="twitter:url" content={url} />
       <meta property="twitter:title" content={siteTitle} />
       <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content={image} />
+      <meta property="twitter:image" content={image.startsWith("http") ? image : `https://mis-club.vercel.app${image}`} />
     </Helmet>
   );
 }
