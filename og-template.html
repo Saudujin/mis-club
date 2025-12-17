@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1200, height=630, initial-scale=1.0">
+    <title>MIS Club OG Image</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1200px;
+            height: 630px;
+            background-color: #001835;
+            background-image: linear-gradient(to bottom right, #012a5e, #001835);
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background Elements */
+        .bg-circle-1 {
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: rgba(2, 76, 165, 0.2);
+            border-radius: 50%;
+            filter: blur(80px);
+        }
+
+        .bg-circle-2 {
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 600px;
+            height: 600px;
+            background: rgba(0, 229, 255, 0.05);
+            border-radius: 50%;
+            filter: blur(100px);
+        }
+
+        .grid-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.5;
+        }
+
+        /* Content Container */
+        .container {
+            z-index: 10;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 24, 53, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 60px 100px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-container {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-text {
+            font-size: 80px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin: 0;
+            background: linear-gradient(to right, #fff, #00e5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 32px;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .tagline {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 50px;
+            color: #00e5ff;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="bg-circle-1"></div>
+    <div class="bg-circle-2"></div>
+    <div class="grid-pattern"></div>
+
+    <div class="container">
+        <!-- Logo Placeholder (SVG will be injected or loaded) -->
+        <div class="logo-container">
+             <!-- Simple SVG representation of MIS logo for the template -->
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#001835" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+        </div>
+        
+        <h1 class="logo-text">MIS Club</h1>
+        <p class="subtitle">نادي نظم المعلومات الإدارية - جامعة الملك سعود</p>
+        
+        <div class="tagline">قرارات ذكية تبدأ من البيانات</div>
+    </div>
+</body>
+</html>

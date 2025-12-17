@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { events as localEvents, Event } from "@/data/eventsData";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import EventDetails from "@/components/EventDetails";
+import SEO from "@/components/SEO";
 
 export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -74,6 +75,11 @@ export default function Events() {
 
   return (
     <div className="min-h-screen pt-24 pb-12 relative overflow-hidden">
+      <SEO 
+        title="الفعاليات" 
+        description="تصفح أحدث الفعاليات وورش العمل التي يقيمها نادي نظم المعلومات الإدارية بجامعة الملك سعود."
+        url="https://mis-club.vercel.app/events"
+      />
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
         <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px]" />

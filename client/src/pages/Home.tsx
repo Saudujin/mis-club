@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { ArrowLeft, Database, Target, Users, Briefcase, ChevronDown, Play, RotateCcw, Shield, FileText, BarChart, HelpCircle, ArrowUp, Plus, Minus } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
+import SEO from "@/components/SEO";
 
 // --- Components ---
 
@@ -535,6 +536,7 @@ function CTASection() {
 export default function Home() {
   return (
     <div className="flex flex-col gap-0">
+      <SEO />
       <HeroSection />
       <StatsSection />
       <AboutSection />
