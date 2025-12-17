@@ -18,7 +18,7 @@ export default function Events() {
     const fetchEvents = async () => {
       try {
         // رابط السكربت الخاص بك
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAza4_Zed7Dselzwy2zy5z3my7Q68g4UW2b6JefQ9hD8io0d70Jh8VSiegEOx6KDLzwA/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7KiDY54dGMT5Ch9KMqOPJgIMUWNVrEeRWc4j8NIK_E852scrmBqPynE7L236TCFdmNg/exec";
         
         const response = await fetch(SCRIPT_URL);
         
