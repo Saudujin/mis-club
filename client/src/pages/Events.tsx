@@ -16,8 +16,25 @@ export default function Events() {
 
   useEffect(() => {
     const fetchEvents = async () => {
+      // Check cache first
+      const cachedData = localStorage.getItem('events_cache');
+      const cachedTime = localStorage.getItem('events_cache_time');
+      const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+      if (cachedData && cachedTime && (Date.now() - parseInt(cachedTime) < CACHE_DURATION)) {
+        setEvents(JSON.parse(cachedData));
+        setIsLoading(false);
+        // Fetch fresh data in background
+        fetchFromApi(true);
+        return;
+      }
+
+      await fetchFromApi();
+    };
+
+    const fetchFromApi = async (isBackground = false) => {
       try {
-        // رابط السكربت الخاص بك
+        if (!isBackground) setIsLoading(true);
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7KiDY54dGMT5Ch9KMqOPJgIMUWNVrEeRWc4j8NIK_E852scrmBqPynE7L236TCFdmNg/exec";
         
         const response = await fetch(SCRIPT_URL);
@@ -29,19 +46,26 @@ export default function Events() {
         const result = await response.json();
 
         if (result.status === "success") {
-          setEvents(result.data);
+          // Format dates to remove time part
+          const formattedEvents = result.data.map((event: any) => ({
+            ...event,
+            date: event.date ? event.date.split('T')[0] : event.date
+          }));
+          
+          setEvents(formattedEvents);
+          // Update cache
+          localStorage.setItem('events_cache', JSON.stringify(formattedEvents));
+          localStorage.setItem('events_cache_time', Date.now().toString());
         } else {
           throw new Error(result.message || "فشل في جلب البيانات");
         }
       } catch (err) {
         console.warn("Error fetching events from API, falling back to local data:", err);
-        // Fallback to local data on error
-        setEvents(localEvents);
-        // Optional: Set error state if you want to show a warning, 
-        // but for better UX we just show local data silently or with a toast
-        // setError("حدث خطأ أثناء تحميل الفعاليات. تم عرض البيانات المحفوظة.");
+        if (!isBackground) {
+          setEvents(localEvents);
+        }
       } finally {
-        setIsLoading(false);
+        if (!isBackground) setIsLoading(false);
       }
     };
 
@@ -101,70 +125,70 @@ export default function Events() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="group h-full bg-white/5 backdrop-blur-sm border-white/10 overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 flex flex-col">
-                  {/* Image Container */}
-                  <div className="relative aspect-video overflow-hidden">
-                    <img 
-                      src={event.image} 
-                      alt={event.title} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      onError={(e) => {
-                        // Fallback image if URL is invalid
-                        (e.target as HTMLImageElement).src = "/images/placeholder-event.jpg"; 
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                    
-                    <Badge 
-                      className={`absolute top-4 right-4 ${
-                        event.isRegistrationOpen 
-                          ? "bg-green-500/90 hover:bg-green-600" 
-                          : "bg-red-500/90 hover:bg-red-600"
-                      } backdrop-blur-md border-0`}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Card 
+                      className="group h-full bg-white/5 backdrop-blur-sm border-white/10 overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 flex flex-col cursor-pointer"
+                      onClick={() => setSelectedEvent(event)}
                     >
-                      {event.isRegistrationOpen ? "التسجيل متاح" : "انتهى التسجيل"}
-                    </Badge>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6 flex-1 flex flex-col">
-                    <div className="flex items-center gap-2 text-primary mb-3 text-sm font-medium">
-                      <Calendar className="w-4 h-4" />
-                      <span>{event.date}</span>
-                    </div>
-
-                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                      {event.title}
-                    </h3>
-
-                    <div className="space-y-2 mb-6 text-white/60 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-white/40" />
-                        <span>{event.time}</span>
+                      {/* Image Container */}
+                      <div className="relative aspect-video overflow-hidden">
+                        <img 
+                          src={event.image} 
+                          alt={event.title} 
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "/images/placeholder-event.jpg"; 
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                        
+                        <Badge 
+                          className={`absolute top-4 right-4 ${
+                            event.isRegistrationOpen 
+                              ? "bg-green-500/90 hover:bg-green-600" 
+                              : "bg-red-500/90 hover:bg-red-600"
+                          } backdrop-blur-md border-0`}
+                        >
+                          {event.isRegistrationOpen ? "التسجيل متاح" : "انتهى التسجيل"}
+                        </Badge>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-white/40" />
-                        <span>{event.location}</span>
-                      </div>
-                    </div>
 
-                    <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
-                      <Dialog>
-                        <DialogTrigger asChild>
+                      {/* Content */}
+                      <div className="p-6 flex-1 flex flex-col">
+                        <div className="flex items-center gap-2 text-primary mb-3 text-sm font-medium">
+                          <Calendar className="w-4 h-4" />
+                          <span>{event.date}</span>
+                        </div>
+
+                        <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                          {event.title}
+                        </h3>
+
+                        <div className="space-y-2 mb-6 text-white/60 text-sm">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-white/40" />
+                            <span>{event.time}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-white/40" />
+                            <span>{event.location}</span>
+                          </div>
+                        </div>
+
+                        <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
                           <Button 
-                            variant="ghost" 
-                            className="text-white hover:text-primary hover:bg-white/5 p-0 h-auto font-medium group/btn"
-                            onClick={() => setSelectedEvent(event)}
+                            className="w-full bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/20 transition-all duration-300 group/btn"
                           >
                             التفاصيل والتسجيل
                             <ArrowRight className="mr-2 w-4 h-4 transition-transform group-hover/btn:-translate-x-1" />
                           </Button>
-                        </DialogTrigger>
-                        <EventDetails event={event} />
-                      </Dialog>
-                    </div>
-                  </div>
-                </Card>
+                        </div>
+                      </div>
+                    </Card>
+                  </DialogTrigger>
+                  <EventDetails event={event} />
+                </Dialog>
               </motion.div>
             ))}
           </div>
