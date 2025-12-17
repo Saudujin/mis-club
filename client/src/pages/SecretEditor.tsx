@@ -327,13 +327,14 @@ export default function SecretEditor() {
                 />
               </div>
 
-              <div className="space-y-2" data-color-mode="light">
+              <div className="space-y-2" data-color-mode="dark">
                 <Label>المحتوى</Label>
                 <div className="rounded-md overflow-hidden min-h-[300px] rtl-editor">
                   <style>{`
                     .rtl-editor .w-md-editor {
-                      background-color: white !important;
-                      color: black !important;
+                      background-color: rgba(30, 41, 59, 0.5) !important;
+                      color: white !important;
+                      border: 1px solid rgba(255, 255, 255, 0.1) !important;
                     }
                     .rtl-editor .w-md-editor-text-pre, 
                     .rtl-editor .w-md-editor-text-input,
@@ -343,6 +344,7 @@ export default function SecretEditor() {
                       font-family: 'IBM Plex Sans Arabic', sans-serif !important;
                       font-size: 16px !important;
                       line-height: 1.8 !important;
+                      color: white !important;
                     }
                     /* Ensure preview matches editor exactly */
                     .rtl-editor .wmde-markdown {
@@ -351,15 +353,40 @@ export default function SecretEditor() {
                       line-height: 1.8 !important;
                       direction: rtl !important;
                       text-align: right !important;
+                      background-color: transparent !important;
+                      color: white !important;
+                    }
+                    /* Style toolbar */
+                    .rtl-editor .w-md-editor-toolbar {
+                      background-color: rgba(30, 41, 59, 0.8) !important;
+                      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
                     }
                     .rtl-editor .w-md-editor-toolbar li > button {
-                      color: #333 !important;
+                      color: #e2e8f0 !important;
+                    }
+                    .rtl-editor .w-md-editor-toolbar li > button:hover {
+                      background-color: rgba(255, 255, 255, 0.1) !important;
+                    }
+                    /* Style headings in preview */
+                    .rtl-editor .wmde-markdown h1,
+                    .rtl-editor .wmde-markdown h2,
+                    .rtl-editor .wmde-markdown h3 {
+                      color: hsl(var(--primary)) !important;
+                      border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+                    }
+                    .rtl-editor .wmde-markdown a {
+                      color: hsl(var(--secondary)) !important;
+                    }
+                    .rtl-editor .wmde-markdown blockquote {
+                      border-left: 4px solid hsl(var(--primary)) !important;
+                      background-color: rgba(255, 255, 255, 0.05) !important;
+                      color: #cbd5e1 !important;
                     }
                   `}</style>
                   <MDEditor
                     value={content}
                     onChange={(val) => setContent(val || "")}
-                    height={400}
+                    height={500}
                     preview="edit"
                     textareaProps={{
                       dir: "rtl",
