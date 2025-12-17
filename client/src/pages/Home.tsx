@@ -111,7 +111,7 @@ function HeroSection() {
 
       </div>
 
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-white/30">
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-white/30 z-20">
         <ChevronDown />
       </div>
     </section>
@@ -130,7 +130,7 @@ function StatsSection() {
     <section className="py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-[var(--brand-blue)]/5" />
       <div className="container relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-4 gap-2 md:gap-8">
           {stats.map((stat, index) => (
             <motion.div
               key={index}
@@ -140,13 +140,13 @@ function StatsSection() {
               transition={{ delay: index * 0.1 }}
               className="text-center space-y-2"
             >
-              <div className="w-12 h-12 mx-auto bg-[var(--brand-cyan)]/10 rounded-full flex items-center justify-center text-[var(--brand-cyan)] mb-4">
-                <stat.icon size={24} />
+              <div className="w-8 h-8 md:w-12 md:h-12 mx-auto bg-[var(--brand-cyan)]/10 rounded-full flex items-center justify-center text-[var(--brand-cyan)] mb-2 md:mb-4">
+                <stat.icon className="w-4 h-4 md:w-6 md:h-6" />
               </div>
-              <div className="text-4xl md:text-5xl font-bold text-white">
+              <div className="text-2xl md:text-5xl font-bold text-white">
                 {stat.value}{stat.suffix}
               </div>
-              <div className="text-white/60 font-medium">{stat.label}</div>
+              <div className="text-white/60 font-medium text-xs md:text-base">{stat.label}</div>
             </motion.div>
           ))}
         </div>
@@ -161,7 +161,7 @@ function FAQSection() {
   const faqs = [
     {
       question: "كيف يمكنني الانضمام إلى النادي؟",
-      answer: "يمكنك الانضمام بسهولة عبر الضغط على زر 'انضم إلينا' في أعلى الصفحة وتعبئة نموذج التسجيل. العضوية مفتوحة لجميع طلاب تخصص نظم المعلومات الإدارية."
+      answer: "يمكنك الانضمام بسهولة عبر الضغط على زر 'انضم إلينا' في أعلى الصفحة وتعبئة نموذج التسجيل. العضوية مفتوحة لجميع طلاب الجامعة."
     },
     {
       question: "هل الدورات والورش مجانية؟",
@@ -482,7 +482,7 @@ function ActivitiesSection() {
           <p className="text-white/60">لمحات من فعالياتنا ومبادراتنا المستمرة</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto md:overflow-visible pb-8 md:pb-0 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
           {activities.map((act, i) => (
             <motion.div 
               key={i} 
@@ -490,7 +490,7 @@ function ActivitiesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.2 }}
-              className="group relative overflow-hidden rounded-xl aspect-[4/3] border border-white/5 shadow-lg hover:shadow-[var(--brand-cyan)]/10 transition-all duration-300"
+              className="group relative overflow-hidden rounded-xl aspect-[4/3] min-w-[85vw] md:min-w-0 snap-center border border-white/5 shadow-lg hover:shadow-[var(--brand-cyan)]/10 transition-all duration-300"
             >
               <img 
                 src={act.img} 
