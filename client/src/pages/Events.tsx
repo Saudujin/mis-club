@@ -4,7 +4,7 @@ import { Calendar, MapPin, Clock, ArrowRight, Loader2, AlertCircle } from "lucid
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Event } from "@/data/eventsData";
+import { events as localEvents, Event } from "@/data/eventsData";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import EventDetails from "@/components/EventDetails";
 
@@ -21,6 +21,11 @@ export default function Events() {
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAza4_Zed7Dselzwy2zy5z3my7Q68g4UW2b6JefQ9hD8io0d70Jh8VSiegEOx6KDLzwA/exec";
         
         const response = await fetch(SCRIPT_URL);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
 
         if (result.status === "success") {
@@ -29,8 +34,12 @@ export default function Events() {
           throw new Error(result.message || "فشل في جلب البيانات");
         }
       } catch (err) {
-        console.error("Error fetching events:", err);
-        setError("حدث خطأ أثناء تحميل الفعاليات. يرجى المحاولة لاحقاً.");
+        console.warn("Error fetching events from API, falling back to local data:", err);
+        // Fallback to local data on error
+        setEvents(localEvents);
+        // Optional: Set error state if you want to show a warning, 
+        // but for better UX we just show local data silently or with a toast
+        // setError("حدث خطأ أثناء تحميل الفعاليات. تم عرض البيانات المحفوظة.");
       } finally {
         setIsLoading(false);
       }
