@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
-import { ArrowLeft, Database, Target, Users, Briefcase, ChevronDown, Play, RotateCcw, Shield, FileText, BarChart } from "lucide-react";
+import { ArrowLeft, Database, Target, Users, Briefcase, ChevronDown, Play, RotateCcw, Shield, FileText, BarChart, HelpCircle, ArrowUp, Plus, Minus } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 
 // --- Components ---
 
@@ -114,6 +115,156 @@ function HeroSection() {
         <ChevronDown />
       </div>
     </section>
+  );
+}
+
+function StatsSection() {
+  const stats = [
+    { label: "عضو نشط", value: 500, suffix: "+", icon: Users },
+    { label: "فعالية سنوية", value: 12, suffix: "+", icon: Target },
+    { label: "ورشة عمل", value: 25, suffix: "+", icon: Briefcase },
+    { label: "شريك نجاح", value: 10, suffix: "+", icon: Shield },
+  ];
+
+  return (
+    <section className="py-20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[var(--brand-blue)]/5" />
+      <div className="container relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="text-center space-y-2"
+            >
+              <div className="w-12 h-12 mx-auto bg-[var(--brand-cyan)]/10 rounded-full flex items-center justify-center text-[var(--brand-cyan)] mb-4">
+                <stat.icon size={24} />
+              </div>
+              <div className="text-4xl md:text-5xl font-bold text-white">
+                {stat.value}{stat.suffix}
+              </div>
+              <div className="text-white/60 font-medium">{stat.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const faqs = [
+    {
+      question: "كيف يمكنني الانضمام إلى النادي؟",
+      answer: "يمكنك الانضمام بسهولة عبر الضغط على زر 'انضم إلينا' في أعلى الصفحة وتعبئة نموذج التسجيل. العضوية مفتوحة لجميع طلاب تخصص نظم المعلومات الإدارية."
+    },
+    {
+      question: "هل الدورات والورش مجانية؟",
+      answer: "نعم، معظم فعاليات وورش العمل التي يقدمها النادي مجانية تماماً للأعضاء والطلاب."
+    },
+    {
+      question: "هل أحصل على شهادة حضور؟",
+      answer: "نعم، يتم منح شهادات حضور معتمدة للمشاركين في الدورات وورش العمل والفعاليات الرئيسية."
+    },
+    {
+      question: "كيف يمكنني المشاركة في تنظيم الفعاليات؟",
+      answer: "نرحب دائماً بالمتطوعين! يمكنك الانضمام لفريق التنظيم من خلال متابعة إعلاناتنا الدورية عن فتح باب التطوع للجان المختلفة."
+    }
+  ];
+
+  return (
+    <section className="py-20 bg-[#001225]">
+      <div className="container max-w-3xl">
+        <div className="text-center mb-12 space-y-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white">الأسئلة الشائعة</h2>
+          <p className="text-white/60">إجابات على أكثر الاستفسارات شيوعاً حول النادي وأنشطته</p>
+        </div>
+        
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="border border-white/10 rounded-lg overflow-hidden bg-white/5"
+            >
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full flex items-center justify-between p-4 md:p-6 text-right hover:bg-white/5 transition-colors"
+              >
+                <span className="font-bold text-white text-lg">{faq.question}</span>
+                {openIndex === index ? (
+                  <Minus className="text-[var(--brand-cyan)] shrink-0" />
+                ) : (
+                  <Plus className="text-white/40 shrink-0" />
+                )}
+              </button>
+              <AnimatePresence>
+                {openIndex === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="p-4 md:p-6 pt-0 text-white/70 leading-relaxed border-t border-white/5">
+                      {faq.answer}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BackToTop() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.pageYOffset > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-[var(--brand-cyan)] text-black rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--brand-cyan)]/80 transition-colors"
+        >
+          <ArrowUp size={24} />
+        </motion.button>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -333,18 +484,25 @@ function ActivitiesSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {activities.map((act, i) => (
-            <div key={i} className="group relative overflow-hidden rounded-xl aspect-[4/3] border border-white/5">
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.2 }}
+              className="group relative overflow-hidden rounded-xl aspect-[4/3] border border-white/5 shadow-lg hover:shadow-[var(--brand-cyan)]/10 transition-all duration-300"
+            >
               <img 
                 src={act.img} 
                 alt={act.title} 
-                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
               />
               {/* Mobile: Always visible gradient & text | Desktop: Visible on hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#001835] via-[#001835]/60 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                <h3 className="text-xl font-bold text-white mb-2">{act.title}</h3>
-                <p className="text-sm text-white/80">{act.desc}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#001835] via-[#001835]/80 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
+                <h3 className="text-xl font-bold text-white mb-2 transform translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-300">{act.title}</h3>
+                <p className="text-sm text-white/80 transform translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-300 delay-75">{act.desc}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -378,10 +536,13 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-0">
       <HeroSection />
-      <GameSection />
+      <StatsSection />
       <AboutSection />
       <ActivitiesSection />
+      <GameSection />
+      <FAQSection />
       <CTASection />
+      <BackToTop />
     </div>
   );
 }
