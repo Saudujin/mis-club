@@ -1,15 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, MapPin, Clock, ArrowRight, Share2, CalendarPlus } from "lucide-react";
+import { Calendar, MapPin, Clock, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { events, Event } from "@/data/eventsData";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import EventDetails from "@/components/EventDetails"; // We will create this component next
+import { Event } from "@/data/eventsData";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import EventDetails from "@/components/EventDetails";
 
 export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        // رابط السكربت الخاص بك
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAza4_Zed7Dselzwy2zy5z3my7Q68g4UW2b6JefQ9hD8io0d70Jh8VSiegEOx6KDLzwA/exec";
+        
+        const response = await fetch(SCRIPT_URL);
+        const result = await response.json();
+
+        if (result.status === "success") {
+          setEvents(result.data);
+        } else {
+          throw new Error(result.message || "فشل في جلب البيانات");
+        }
+      } catch (err) {
+        console.error("Error fetching events:", err);
+        setError("حدث خطأ أثناء تحميل الفعاليات. يرجى المحاولة لاحقاً.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <div className="min-h-screen pt-24 pb-12 relative overflow-hidden">
@@ -38,77 +66,100 @@ export default function Events() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event, index) => (
-            <motion.div
-              key={event.id}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card className="group h-full bg-white/5 backdrop-blur-sm border-white/10 overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 flex flex-col">
-                {/* Image Container */}
-                <div className="relative aspect-video overflow-hidden">
-                  <img 
-                    src={event.image} 
-                    alt={event.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                  
-                  <Badge 
-                    className={`absolute top-4 right-4 ${
-                      event.isRegistrationOpen 
-                        ? "bg-green-500/90 hover:bg-green-600" 
-                        : "bg-red-500/90 hover:bg-red-600"
-                    } backdrop-blur-md border-0`}
-                  >
-                    {event.isRegistrationOpen ? "التسجيل متاح" : "انتهى التسجيل"}
-                  </Badge>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="flex items-center gap-2 text-primary mb-3 text-sm font-medium">
-                    <Calendar className="w-4 h-4" />
-                    <span>{event.date}</span>
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+            <p className="text-white/60">جاري تحميل الفعاليات...</p>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
+            <p className="text-white/80 mb-4">{error}</p>
+            <Button variant="outline" onClick={() => window.location.reload()} className="border-white/20 text-white hover:bg-white/10">
+              إعادة المحاولة
+            </Button>
+          </div>
+        ) : events.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-white/60 text-lg">لا توجد فعاليات متاحة حالياً.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {events.map((event, index) => (
+              <motion.div
+                key={event.id}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="group h-full bg-white/5 backdrop-blur-sm border-white/10 overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 flex flex-col">
+                  {/* Image Container */}
+                  <div className="relative aspect-video overflow-hidden">
+                    <img 
+                      src={event.image} 
+                      alt={event.title} 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => {
+                        // Fallback image if URL is invalid
+                        (e.target as HTMLImageElement).src = "/images/placeholder-event.jpg"; 
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                    
+                    <Badge 
+                      className={`absolute top-4 right-4 ${
+                        event.isRegistrationOpen 
+                          ? "bg-green-500/90 hover:bg-green-600" 
+                          : "bg-red-500/90 hover:bg-red-600"
+                      } backdrop-blur-md border-0`}
+                    >
+                      {event.isRegistrationOpen ? "التسجيل متاح" : "انتهى التسجيل"}
+                    </Badge>
                   </div>
 
-                  <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                    {event.title}
-                  </h3>
-
-                  <div className="space-y-2 mb-6 text-white/60 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-white/40" />
-                      <span>{event.time}</span>
+                  {/* Content */}
+                  <div className="p-6 flex-1 flex flex-col">
+                    <div className="flex items-center gap-2 text-primary mb-3 text-sm font-medium">
+                      <Calendar className="w-4 h-4" />
+                      <span>{event.date}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-white/40" />
-                      <span>{event.location}</span>
+
+                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                      {event.title}
+                    </h3>
+
+                    <div className="space-y-2 mb-6 text-white/60 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-white/40" />
+                        <span>{event.time}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-white/40" />
+                        <span>{event.location}</span>
+                      </div>
+                    </div>
+
+                    <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            className="text-white hover:text-primary hover:bg-white/5 p-0 h-auto font-medium group/btn"
+                            onClick={() => setSelectedEvent(event)}
+                          >
+                            التفاصيل والتسجيل
+                            <ArrowRight className="mr-2 w-4 h-4 transition-transform group-hover/btn:-translate-x-1" />
+                          </Button>
+                        </DialogTrigger>
+                        <EventDetails event={event} />
+                      </Dialog>
                     </div>
                   </div>
-
-                  <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          className="text-white hover:text-primary hover:bg-white/5 p-0 h-auto font-medium group/btn"
-                          onClick={() => setSelectedEvent(event)}
-                        >
-                          التفاصيل والتسجيل
-                          <ArrowRight className="mr-2 w-4 h-4 transition-transform group-hover/btn:-translate-x-1" />
-                        </Button>
-                      </DialogTrigger>
-                      <EventDetails event={event} />
-                    </Dialog>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
