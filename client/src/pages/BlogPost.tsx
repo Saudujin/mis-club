@@ -66,7 +66,14 @@ export default function BlogPost() {
 
       {/* Hero Image Background (Blurred) */}
       <div className="absolute top-0 left-0 w-full h-[60vh] overflow-hidden -z-10">
-        <img src={post.image} alt={post.title} className="w-full h-full object-cover opacity-20 blur-xl" />
+        <img 
+          src={post.image} 
+          alt={post.title} 
+          loading="eager"
+          // @ts-ignore
+          fetchpriority="high"
+          className="w-full h-full object-cover opacity-20 blur-xl" 
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background" />
       </div>
 
@@ -86,6 +93,9 @@ export default function BlogPost() {
             <img 
               src={post.image} 
               alt={post.title} 
+              loading="eager"
+              // @ts-ignore
+              fetchpriority="high"
               className="w-full h-full object-cover"
             />
           </div>

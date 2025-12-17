@@ -336,23 +336,29 @@ export default function SecretEditor() {
                       color: white !important;
                       border: 1px solid rgba(255, 255, 255, 0.1) !important;
                     }
+                    /* Force strict font synchronization for ALL editor layers */
                     .rtl-editor .w-md-editor-text-pre, 
                     .rtl-editor .w-md-editor-text-input,
-                    .rtl-editor textarea {
+                    .rtl-editor textarea,
+                    .rtl-editor .wmde-markdown,
+                    .rtl-editor .wmde-markdown * {
                       direction: rtl !important;
                       text-align: right !important;
                       font-family: 'IBM Plex Sans Arabic', sans-serif !important;
                       font-size: 16px !important;
                       line-height: 1.8 !important;
-                      color: white !important;
+                      letter-spacing: normal !important;
                     }
+                    
+                    /* Specific overrides to prevent font mismatches */
+                    .rtl-editor .w-md-editor-text-pre code,
+                    .rtl-editor .w-md-editor-text-input,
+                    .rtl-editor textarea {
+                      font-family: 'IBM Plex Sans Arabic', sans-serif !important;
+                    }
+
                     /* Ensure preview matches editor exactly */
                     .rtl-editor .wmde-markdown {
-                      font-family: 'IBM Plex Sans Arabic', sans-serif !important;
-                      font-size: 16px !important;
-                      line-height: 1.8 !important;
-                      direction: rtl !important;
-                      text-align: right !important;
                       background-color: transparent !important;
                       color: white !important;
                     }
