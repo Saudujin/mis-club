@@ -3,9 +3,10 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
-import { ArrowLeft, Database, Target, Users, Briefcase, ChevronDown, Play, RotateCcw, Shield, FileText, BarChart, HelpCircle, ArrowUp, Plus, Minus } from "lucide-react";
+import { ArrowLeft, Database, Target, Users, Briefcase, ChevronDown, Play, RotateCcw, Shield, FileText, BarChart, HelpCircle, ArrowUp, Plus, Minus, Calendar } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import SEO from "@/components/SEO";
+import { Octokit } from "@octokit/rest";
 
 // --- Components ---
 
@@ -21,8 +22,8 @@ function HeroSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative block mt-8 lg:mt-0 order-1 lg:order-2"
         >
-          {/* Professional Dashboard Composition */}
-          <div className="relative w-full aspect-square max-w-[280px] md:max-w-md mx-auto">
+          {/* Professional Dashboard Composition - Hidden on Mobile */}
+          <div className="relative w-full aspect-square max-w-[280px] md:max-w-md mx-auto hidden md:block">
             <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand-blue)] to-transparent rounded-xl opacity-30 blur-2xl" />
             <div className="absolute inset-0 bg-[#001835]/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 md:p-8 flex flex-col justify-between shadow-2xl">
               <div className="flex justify-between items-start border-b border-white/5 pb-4 md:pb-6">
@@ -97,14 +98,14 @@ function HeroSection() {
           <p className="text-xl text-white/70 max-w-lg leading-relaxed">
             في عالم يعتمد على السرعة والدقة، نظم المعلومات الإدارية هي الجسر بين التقنية والإدارة، ونحن في نادي MIS نصنع هذا الجسر.
           </p>
-          <div className="flex flex-wrap gap-4 pt-4">
+          <div className="flex flex-wrap gap-4 pt-4 justify-center lg:justify-start">
             <Link href="/join">
               <Button size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 text-lg px-8 h-14 rounded-lg font-bold btn-shine">
                 ابدأ التجربة <ArrowLeft className="mr-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 text-lg px-8 h-14 rounded-lg" onClick={() => document.getElementById('game')?.scrollIntoView({ behavior: 'smooth' })}>
-              العب الآن <Play className="mr-2 h-5 w-5" />
+            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 text-lg px-8 h-14 rounded-lg flex items-center" onClick={() => document.getElementById('game')?.scrollIntoView({ behavior: 'smooth' })}>
+              العب الآن <Play className="mr-2 h-5 w-5 mt-1" />
             </Button>
           </div>
         </motion.div>
@@ -127,11 +128,42 @@ function StatsSection() {
     { label: "شريك نجاح", value: 10, suffix: "+", icon: Shield },
   ];
 
+  const [recentPosts, setRecentPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecentPosts = async () => {
+      try {
+        const octokit = new Octokit();
+        const { data: fileData } = await octokit.repos.getContent({
+          owner: "Saudujin",
+          repo: "mis-club",
+          path: "client/public/posts.json",
+        });
+
+        if (!Array.isArray(fileData) && fileData.type === "file") {
+          const contentEncoded = fileData.content;
+          const contentDecoded = atob(contentEncoded);
+          const jsonString = decodeURIComponent(escape(contentDecoded));
+          const posts = JSON.parse(jsonString);
+          setRecentPosts(posts.slice(0, 3)); // Get latest 3 posts
+        }
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRecentPosts();
+  }, []);
+
   return (
     <section className="py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-[var(--brand-blue)]/5" />
       <div className="container relative z-10">
-        <div className="grid grid-cols-4 gap-2 md:gap-8">
+        {/* Desktop View: Stats */}
+        <div className="hidden md:grid grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <motion.div
               key={index}
@@ -141,15 +173,49 @@ function StatsSection() {
               transition={{ delay: index * 0.1 }}
               className="text-center space-y-2"
             >
-              <div className="w-8 h-8 md:w-12 md:h-12 mx-auto bg-[var(--brand-cyan)]/10 rounded-full flex items-center justify-center text-[var(--brand-cyan)] mb-2 md:mb-4">
-                <stat.icon className="w-4 h-4 md:w-6 md:h-6" />
+              <div className="w-12 h-12 mx-auto bg-[var(--brand-cyan)]/10 rounded-full flex items-center justify-center text-[var(--brand-cyan)] mb-4">
+                <stat.icon className="w-6 h-6" />
               </div>
-              <div className="text-2xl md:text-5xl font-bold text-white">
+              <div className="text-5xl font-bold text-white">
                 {stat.value}{stat.suffix}
               </div>
-              <div className="text-white/60 font-medium text-xs md:text-base">{stat.label}</div>
+              <div className="text-white/60 font-medium text-base">{stat.label}</div>
             </motion.div>
           ))}
+        </div>
+
+        {/* Mobile View: Recent Posts Carousel */}
+        <div className="md:hidden">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">أحدث المقالات</h3>
+          <div className="flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory hide-scrollbar">
+            {isLoading ? (
+              <div className="w-full text-center text-white/50">جاري التحميل...</div>
+            ) : (
+              recentPosts.map((post, index) => (
+                <Link key={post.id} href={`/blog/${post.id}`}>
+                  <div className="min-w-[280px] snap-center bg-[#001835] border border-white/10 rounded-xl overflow-hidden shadow-lg">
+                    <div className="h-32 overflow-hidden relative">
+                      <img 
+                        src={post.image} 
+                        alt={post.title} 
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#001835] to-transparent opacity-60" />
+                    </div>
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 text-xs text-[var(--brand-cyan)] mb-2">
+                        <Calendar className="w-3 h-3" />
+                        {post.date}
+                      </div>
+                      <h4 className="text-white font-bold line-clamp-2 mb-2">{post.title}</h4>
+                      <p className="text-white/60 text-xs line-clamp-2">{post.excerpt}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </section>
@@ -260,290 +326,38 @@ function BackToTop() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-[var(--brand-cyan)] text-black rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--brand-cyan)]/80 transition-colors"
+          className="fixed bottom-8 right-8 z-50 p-3 bg-[var(--brand-cyan)] text-black rounded-full shadow-lg hover:bg-[var(--brand-cyan)]/80 transition-colors"
         >
-          <ArrowUp size={24} />
+          <ArrowUp className="w-6 h-6" />
         </motion.button>
       )}
     </AnimatePresence>
   );
 }
 
-function GameSection() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [score, setScore] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId: number;
-    let items: { x: number, y: number, type: 'data' | 'virus', speed: number }[] = [];
-    let playerX = canvas.width / 2;
-    const playerWidth = 80;
-    const playerHeight = 12;
-    let frameCount = 0;
-
-    const spawnItem = () => {
-      // Slower spawn rate: every 60 frames (approx 1 sec)
-      if (frameCount % 60 === 0) {
-        items.push({
-          x: Math.random() * (canvas.width - 40) + 20,
-          y: 0,
-          type: Math.random() > 0.3 ? 'data' : 'virus',
-          speed: 2 + Math.random() * 1.5 // Slower speed
-        });
-      }
-    };
-
-    const drawIcon = (ctx: CanvasRenderingContext2D, type: 'data' | 'virus', x: number, y: number) => {
-      ctx.fillStyle = type === 'data' ? '#00e5ff' : '#ef4444';
-      ctx.beginPath();
-      if (type === 'data') {
-        // Simple Database Icon shape
-        ctx.rect(x - 10, y - 10, 20, 20);
-      } else {
-        // Simple Virus/X shape
-        ctx.moveTo(x - 8, y - 8);
-        ctx.lineTo(x + 8, y + 8);
-        ctx.moveTo(x + 8, y - 8);
-        ctx.lineTo(x - 8, y + 8);
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = '#ef4444';
-        ctx.stroke();
-        return; // Skip fill for virus
-      }
-      ctx.fill();
-    };
-
-    const update = () => {
-      frameCount++;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw Player (Paddle)
-      ctx.fillStyle = '#00e5ff';
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = '#00e5ff';
-      ctx.fillRect(playerX - playerWidth / 2, canvas.height - 20, playerWidth, playerHeight);
-      ctx.shadowBlur = 0;
-
-      // Update and Draw Items
-      spawnItem();
-      
-      for (let i = items.length - 1; i >= 0; i--) {
-        const item = items[i];
-        item.y += item.speed;
-
-        drawIcon(ctx, item.type, item.x, item.y);
-
-        // Collision Detection
-        if (
-          item.y > canvas.height - 30 &&
-          item.y < canvas.height &&
-          item.x > playerX - playerWidth / 2 &&
-          item.x < playerX + playerWidth / 2
-        ) {
-          if (item.type === 'data') {
-            setScore(s => s + 10);
-          } else {
-            setGameOver(true);
-            setIsPlaying(false);
-          }
-          items.splice(i, 1);
-        } else if (item.y > canvas.height) {
-          items.splice(i, 1);
-        }
-      }
-
-      if (!gameOver) {
-        animationFrameId = requestAnimationFrame(update);
-      }
-    };
-
-    const handleMouseMove = (e: MouseEvent | TouchEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      let clientX;
-      
-      if ('touches' in e) {
-        clientX = e.touches[0].clientX;
-        e.preventDefault(); // Prevent scrolling while playing
-      } else {
-        clientX = (e as MouseEvent).clientX;
-      }
-
-      // Scale coordinate for canvas resolution vs display size
-      const scaleX = canvas.width / rect.width;
-      playerX = (clientX - rect.left) * scaleX;
-
-      // Boundary checks
-      if (playerX < playerWidth / 2) playerX = playerWidth / 2;
-      if (playerX > canvas.width - playerWidth / 2) playerX = canvas.width - playerWidth / 2;
-    };
-
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('touchmove', handleMouseMove, { passive: false });
-    canvas.addEventListener('touchstart', handleMouseMove, { passive: false });
-    update();
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('touchmove', handleMouseMove);
-      canvas.removeEventListener('touchstart', handleMouseMove);
-    };
-  }, [isPlaying, gameOver]);
-
-  return (
-    <section id="game" className="py-20 bg-[#001225] relative overflow-hidden">
-      <div className="container text-center space-y-8">
-        <div className="space-y-2">
-          <h2 className="text-3xl font-bold text-white">لعبة اصطياد البيانات</h2>
-          <p className="text-white/60">اجمع البيانات الصحيحة (المربعات الزرقاء) وتجنب الفيروسات (علامات X الحمراء)</p>
-        </div>
-
-        <div className="relative mx-auto max-w-3xl aspect-video bg-[#000a15] rounded-xl border border-white/10 overflow-hidden shadow-2xl">
-          {!isPlaying && !gameOver && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10 backdrop-blur-sm">
-              <Button onClick={() => setIsPlaying(true)} size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 font-bold">
-                <Play className="mr-2 h-5 w-5" /> ابدأ اللعب
-              </Button>
-            </div>
-          )}
-          
-          {gameOver && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-10 backdrop-blur-sm space-y-4">
-              <h3 className="text-2xl font-bold text-red-500">انتهت اللعبة!</h3>
-              <p className="text-white text-xl">النتيجة: {score}</p>
-              <Button onClick={() => { setGameOver(false); setScore(0); setIsPlaying(true); }} variant="outline" className="text-white border-white/20">
-                <RotateCcw className="mr-2 h-4 w-4" /> حاول مرة أخرى
-              </Button>
-            </div>
-          )}
-
-          <div className="absolute top-4 right-4 text-white font-mono text-xl z-10 bg-black/50 px-3 py-1 rounded border border-white/10">
-            Score: {score}
-          </div>
-
-          <canvas 
-            ref={canvasRef} 
-            width={800} 
-            height={450} 
-            className="w-full h-full cursor-none"
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function AboutSection() {
-  const features = [
-    { icon: <Target className="w-8 h-8 text-[var(--brand-cyan)]" />, title: "الرؤية", desc: "نتطلع إلى أن نصبح نادٍ رائد في جامعة الملك سعود، من خلال دعم مجتمع فني إداري قادر على المنافسة." },
-    { icon: <Briefcase className="w-8 h-8 text-[var(--brand-cyan)]" />, title: "الرسالة", desc: "توفير بيئة محفزة وغنية بالمعرفة والفرص، تُسهم في تنمية مهارات المهتمين بنظم المعلومات الإدارية." },
-    { icon: <Users className="w-8 h-8 text-[var(--brand-cyan)]" />, title: "الهدف", desc: "تعزيز معرفة الطلاب ومهاراتهم في الجوانب الأكاديمية والمهنية، وبناء جيل واعٍ تقنيًا." },
-  ];
-
-  return (
-    <section className="py-20 container">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {features.map((f, i) => (
-          <Card key={i} className="glass-card border-white/5 hover:border-[var(--brand-cyan)]/30 transition-all duration-300">
-            <CardContent className="p-8 space-y-4 text-center">
-              <div className="mx-auto w-16 h-16 rounded-lg bg-[var(--brand-blue)]/10 flex items-center justify-center mb-4 border border-[var(--brand-blue)]/20">
-                {f.icon}
-              </div>
-              <h3 className="text-2xl font-bold text-white">{f.title}</h3>
-              <p className="text-white/60 leading-relaxed">{f.desc}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ActivitiesSection() {
-  const activities = [
-    { img: "/images/mis1.png", title: "اللقاء التعريفي", desc: "لقاء تعريفي بأهداف النادي، لجانه، وخططه." },
-    { img: "/images/mis2.png", title: "الاحتفال باليوم الوطني", desc: "مشاركة طلابية تعكس الهوية الوطنية وتعزز الانتماء." },
-    { img: "/images/mis3.png", title: "معرض تحليل البيانات", desc: "معرض تعليمي يركز على تحليل البيانات ومشاريع الطلاب." },
-  ];
-
-  return (
-    <section className="py-20 bg-[#001225]">
-      <div className="container space-y-12">
-        <div className="text-center space-y-4">
-          <h2 className="text-4xl font-bold text-white">أنشطة صنعت الأثر</h2>
-          <p className="text-white/60">لمحات من فعالياتنا ومبادراتنا المستمرة</p>
-        </div>
-
-        <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto md:overflow-visible pb-8 md:pb-0 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-          {activities.map((act, i) => (
-            <motion.div 
-              key={i} 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.2 }}
-              className="group relative overflow-hidden rounded-xl aspect-[4/3] min-w-[85vw] md:min-w-0 snap-center border border-white/5 shadow-lg hover:shadow-[var(--brand-cyan)]/10 transition-all duration-300"
-            >
-              <img 
-                src={act.img} 
-                alt={act.title} 
-                className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
-              />
-              {/* Mobile: Always visible gradient & text | Desktop: Visible on hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#001835] via-[#001835]/80 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
-                <h3 className="text-xl font-bold text-white mb-2 transform translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-300">{act.title}</h3>
-                <p className="text-sm text-white/80 transform translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-300 delay-75">{act.desc}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CTASection() {
-  return (
-    <section className="py-24 container text-center">
-      <div className="glass-panel p-12 rounded-2xl max-w-4xl mx-auto space-y-8 relative overflow-hidden border border-white/10">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--brand-blue)] via-[var(--brand-cyan)] to-[var(--brand-blue)]" />
-        
-        <h2 className="text-4xl md:text-5xl font-bold text-white">
-          هل تبحث عن تجربة جامعية مختلفة؟
-        </h2>
-        <p className="text-xl text-white/60 max-w-2xl mx-auto">
-          هل تريد تطوير مهاراتك وصناعة أثر حقيقي؟ انضم إلينا اليوم وكن جزءاً من التغيير.
-        </p>
-        <Link href="/join">
-         <Button size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 text-lg px-8 h-14 rounded-lg font-bold shadow-lg shadow-[var(--brand-cyan)]/10 btn-shine">
-            انضم إلى نادي MIS
-          </Button>
-        </Link>
-      </div>
-    </section>
-  );
-}
-
 export default function Home() {
   return (
-    <div className="flex flex-col gap-0">
-      <SEO />
+    <div className="min-h-screen bg-[#000B18]">
+      <SEO 
+        title="الرئيسية" 
+        description="نادي نظم المعلومات الإدارية بجامعة الملك سعود - الجسر بين التقنية والإدارة"
+      />
+      
       <HeroSection />
       <StatsSection />
-      <AboutSection />
-      <ActivitiesSection />
-      <GameSection />
+      
+      {/* Game Section Placeholder - Replace with actual Game Component if available */}
+      <section id="game" className="py-20 bg-[#001835] text-center">
+        <div className="container">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">لعبة الذاكرة التقنية</h2>
+          <p className="text-white/60 mb-8">اختبر معلوماتك في مجال نظم المعلومات الإدارية</p>
+          <div className="aspect-video max-w-4xl mx-auto bg-black/30 rounded-xl border border-white/10 flex items-center justify-center">
+            <span className="text-white/40">منطقة اللعبة (قريباً)</span>
+          </div>
+        </div>
+      </section>
+
       <FAQSection />
-      <CTASection />
       <BackToTop />
     </div>
   );
