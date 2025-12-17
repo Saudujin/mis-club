@@ -329,12 +329,28 @@ export default function SecretEditor() {
 
               <div className="space-y-2" data-color-mode="light">
                 <Label>المحتوى</Label>
-                <div className="rounded-md overflow-hidden min-h-[300px]">
+                <div className="rounded-md overflow-hidden min-h-[300px] rtl-editor">
+                  <style>{`
+                    .rtl-editor .w-md-editor-text-pre, 
+                    .rtl-editor .w-md-editor-text-input,
+                    .rtl-editor textarea {
+                      direction: rtl !important;
+                      text-align: right !important;
+                      font-family: 'IBM Plex Sans Arabic', sans-serif !important;
+                    }
+                    .rtl-editor .w-md-editor-toolbar li > button {
+                      color: #333 !important;
+                    }
+                  `}</style>
                   <MDEditor
                     value={content}
                     onChange={(val) => setContent(val || "")}
                     height={400}
                     preview="edit"
+                    textareaProps={{
+                      dir: "rtl",
+                      placeholder: "اكتب محتوى المقال هنا..."
+                    }}
                   />
                 </div>
               </div>
