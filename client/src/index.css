@@ -216,3 +216,28 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
+/* Enforce RTL globally */
+html {
+  direction: rtl;
+}
+
+/* Ensure content inside blog posts and other text areas is RTL */
+.prose {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Fix for list items in RTL */
+.prose ul, .prose ol {
+  padding-right: 1.625em;
+  padding-left: 0;
+}
+
+/* Fix for blockquotes in RTL */
+.prose blockquote {
+  border-left: none;
+  border-right-width: 0.25rem;
+  padding-left: 0;
+  padding-right: 1em;
+}
