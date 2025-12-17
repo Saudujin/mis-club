@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
-import MDEditor from "@uiw/react-md-editor";
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Image from '@tiptap/extension-image';
+import Link from '@tiptap/extension-link';
+import TextAlign from '@tiptap/extension-text-align';
+import Placeholder from '@tiptap/extension-placeholder';
 import { Octokit } from "@octokit/rest";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Save, Github, Lock, Trash2, Edit, Plus, RefreshCw } from "lucide-react";
+import { Loader2, Save, Github, Lock, Trash2, Edit, Plus, RefreshCw, Bold, Italic, List, ListOrdered, Quote, AlignRight, AlignCenter, AlignLeft, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -20,7 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 // GitHub Configuration
-const REPO_OWNER = "Saudujin"; // Corrected username
+const REPO_OWNER = "Saudujin";
 const REPO_NAME = "mis-club";
 const FILE_PATH = "client/public/posts.json";
 
@@ -34,6 +39,128 @@ interface Post {
   author: string;
 }
 
+const MenuBar = ({ editor }: { editor: any }) => {
+  if (!editor) {
+    return null;
+  }
+
+  const addImage = () => {
+    const url = window.prompt('أدخل رابط الصورة:');
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+  };
+
+  const setLink = () => {
+    const previousUrl = editor.getAttributes('link').href;
+    const url = window.prompt('أدخل الرابط:', previousUrl);
+
+    if (url === null) {
+      return;
+    }
+
+    if (url === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+      return;
+    }
+
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+  };
+
+  return (
+    <div className="flex flex-wrap gap-2 p-2 mb-4 border-b border-white/10 bg-black/20 rounded-t-lg">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleBold().run()}
+        disabled={!editor.can().chain().focus().toggleBold().run()}
+        className={editor.isActive('bold') ? 'bg-white/10' : ''}
+      >
+        <Bold className="w-4 h-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+        disabled={!editor.can().chain().focus().toggleItalic().run()}
+        className={editor.isActive('italic') ? 'bg-white/10' : ''}
+      >
+        <Italic className="w-4 h-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+        className={editor.isActive('heading', { level: 2 }) ? 'bg-white/10' : ''}
+      >
+        H2
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+        className={editor.isActive('heading', { level: 3 }) ? 'bg-white/10' : ''}
+      >
+        H3
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        className={editor.isActive('bulletList') ? 'bg-white/10' : ''}
+      >
+        <List className="w-4 h-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        className={editor.isActive('orderedList') ? 'bg-white/10' : ''}
+      >
+        <ListOrdered className="w-4 h-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        className={editor.isActive('blockquote') ? 'bg-white/10' : ''}
+      >
+        <Quote className="w-4 h-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setTextAlign('right').run()}
+        className={editor.isActive({ textAlign: 'right' }) ? 'bg-white/10' : ''}
+      >
+        <AlignRight className="w-4 h-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setTextAlign('center').run()}
+        className={editor.isActive({ textAlign: 'center' }) ? 'bg-white/10' : ''}
+      >
+        <AlignCenter className="w-4 h-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setTextAlign('left').run()}
+        className={editor.isActive({ textAlign: 'left' }) ? 'bg-white/10' : ''}
+      >
+        <AlignLeft className="w-4 h-4" />
+      </Button>
+      <Button variant="ghost" size="sm" onClick={setLink} className={editor.isActive('link') ? 'bg-white/10' : ''}>
+        <LinkIcon className="w-4 h-4" />
+      </Button>
+      <Button variant="ghost" size="sm" onClick={addImage}>
+        <ImageIcon className="w-4 h-4" />
+      </Button>
+    </div>
+  );
+};
+
 export default function SecretEditor() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
@@ -45,12 +172,35 @@ export default function SecretEditor() {
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [image, setImage] = useState("");
-  const [content, setContent] = useState("");
   
   // Data State
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Image,
+      Link.configure({
+        openOnClick: false,
+      }),
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+        defaultAlignment: 'right',
+      }),
+      Placeholder.configure({
+        placeholder: 'اكتب محتوى المقال هنا...',
+      }),
+    ],
+    content: '',
+    editorProps: {
+      attributes: {
+        class: 'prose prose-invert prose-lg max-w-none focus:outline-none min-h-[300px] px-4 py-2',
+        dir: 'rtl',
+      },
+    },
+  });
 
   // Load token from local storage
   useEffect(() => {
@@ -97,7 +247,6 @@ export default function SecretEditor() {
       if (!Array.isArray(fileData) && fileData.type === "file") {
         const contentEncoded = fileData.content;
         const contentDecoded = atob(contentEncoded);
-        // Handle UTF-8 characters correctly
         const jsonString = decodeURIComponent(escape(contentDecoded));
         const parsedPosts = JSON.parse(jsonString);
         setPosts(parsedPosts);
@@ -116,7 +265,7 @@ export default function SecretEditor() {
     setTitle(post.title);
     setExcerpt(post.excerpt);
     setImage(post.image);
-    setContent(post.content);
+    editor?.commands.setContent(post.content);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -126,7 +275,7 @@ export default function SecretEditor() {
     setTitle("");
     setExcerpt("");
     setImage("");
-    setContent("");
+    editor?.commands.setContent('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -137,7 +286,6 @@ export default function SecretEditor() {
     const octokit = new Octokit({ auth: githubToken });
 
     try {
-      // 1. Get current file content
       const { data: currentFile } = await octokit.repos.getContent({
         owner: REPO_OWNER,
         repo: REPO_NAME,
@@ -145,11 +293,7 @@ export default function SecretEditor() {
       });
 
       if (!Array.isArray(currentFile) && currentFile.type === "file") {
-        // 2. Filter out the deleted post
         const updatedPosts = posts.filter(p => p.id !== postId);
-
-        // 3. Update file on GitHub
-        // Use unescape(encodeURIComponent(...)) to handle UTF-8 characters
         const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(updatedPosts, null, 2))));
 
         await octokit.repos.createOrUpdateFileContents({
@@ -179,7 +323,7 @@ export default function SecretEditor() {
       return;
     }
 
-    if (!title || !content) {
+    if (!title || !editor?.getText()) {
       toast.error("العنوان والمحتوى مطلوبان");
       return;
     }
@@ -188,7 +332,6 @@ export default function SecretEditor() {
     const octokit = new Octokit({ auth: githubToken });
 
     try {
-      // 1. Get current file content
       const { data: currentFile } = await octokit.repos.getContent({
         owner: REPO_OWNER,
         repo: REPO_NAME,
@@ -196,12 +339,11 @@ export default function SecretEditor() {
       });
 
       if (!Array.isArray(currentFile) && currentFile.type === "file") {
-        // 2. Prepare post data
         const postData = {
           id: isEditing && currentPostId ? currentPostId : title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
           title,
           excerpt,
-          content,
+          content: editor.getHTML(), // Save as HTML instead of Markdown
           image: image || "https://mis-club.vercel.app/og-image.png",
           date: isEditing ? posts.find(p => p.id === currentPostId)?.date || new Date().toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
           author: "إدارة النادي"
@@ -214,7 +356,6 @@ export default function SecretEditor() {
           updatedPosts = [postData, ...posts];
         }
 
-        // 3. Update file on GitHub
         const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(updatedPosts, null, 2))));
 
         await octokit.repos.createOrUpdateFileContents({
@@ -329,76 +470,9 @@ export default function SecretEditor() {
 
               <div className="space-y-2" data-color-mode="dark">
                 <Label>المحتوى</Label>
-                <div className="rounded-md overflow-hidden min-h-[300px] rtl-editor">
-                  <style>{`
-                    .rtl-editor .w-md-editor {
-                      background-color: rgba(30, 41, 59, 0.5) !important;
-                      color: white !important;
-                      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                    }
-                    /* Force strict font synchronization for ALL editor layers */
-                    .rtl-editor .w-md-editor-text-pre, 
-                    .rtl-editor .w-md-editor-text-input,
-                    .rtl-editor textarea,
-                    .rtl-editor .wmde-markdown,
-                    .rtl-editor .wmde-markdown * {
-                      direction: rtl !important;
-                      text-align: right !important;
-                      font-family: 'IBM Plex Sans Arabic', sans-serif !important;
-                      font-size: 16px !important;
-                      line-height: 1.8 !important;
-                      letter-spacing: normal !important;
-                    }
-                    
-                    /* Specific overrides to prevent font mismatches */
-                    .rtl-editor .w-md-editor-text-pre code,
-                    .rtl-editor .w-md-editor-text-input,
-                    .rtl-editor textarea {
-                      font-family: 'IBM Plex Sans Arabic', sans-serif !important;
-                    }
-
-                    /* Ensure preview matches editor exactly */
-                    .rtl-editor .wmde-markdown {
-                      background-color: transparent !important;
-                      color: white !important;
-                    }
-                    /* Style toolbar */
-                    .rtl-editor .w-md-editor-toolbar {
-                      background-color: rgba(30, 41, 59, 0.8) !important;
-                      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-                    }
-                    .rtl-editor .w-md-editor-toolbar li > button {
-                      color: #e2e8f0 !important;
-                    }
-                    .rtl-editor .w-md-editor-toolbar li > button:hover {
-                      background-color: rgba(255, 255, 255, 0.1) !important;
-                    }
-                    /* Style headings in preview */
-                    .rtl-editor .wmde-markdown h1,
-                    .rtl-editor .wmde-markdown h2,
-                    .rtl-editor .wmde-markdown h3 {
-                      color: hsl(var(--primary)) !important;
-                      border-bottom-color: rgba(255, 255, 255, 0.1) !important;
-                    }
-                    .rtl-editor .wmde-markdown a {
-                      color: hsl(var(--secondary)) !important;
-                    }
-                    .rtl-editor .wmde-markdown blockquote {
-                      border-left: 4px solid hsl(var(--primary)) !important;
-                      background-color: rgba(255, 255, 255, 0.05) !important;
-                      color: #cbd5e1 !important;
-                    }
-                  `}</style>
-                  <MDEditor
-                    value={content}
-                    onChange={(val) => setContent(val || "")}
-                    height={500}
-                    preview="edit"
-                    textareaProps={{
-                      dir: "rtl",
-                      placeholder: "اكتب محتوى المقال هنا..."
-                    }}
-                  />
+                <div className="rounded-md overflow-hidden border border-white/10 bg-slate-900/50 min-h-[400px]">
+                  <MenuBar editor={editor} />
+                  <EditorContent editor={editor} />
                 </div>
               </div>
 
