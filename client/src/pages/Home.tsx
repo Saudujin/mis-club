@@ -6,6 +6,7 @@ import { Link } from "wouter";
 import { ArrowLeft, Database, Target, Users, Briefcase, ChevronDown, Play, RotateCcw, Shield, FileText, BarChart, HelpCircle, ArrowUp, Plus, Minus, Calendar } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import SEO from "@/components/SEO";
+import DataCatcherGame from "@/components/DataCatcherGame";
 
 // --- Components ---
 
@@ -216,34 +217,59 @@ function VisionMissionSection() {
   return (
     <section className="py-20 bg-[#001225]">
       <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">نبذة عن النادي</h2>
+          <p className="text-white/60">About MIS Club</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Vision */}
           <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors"
+            className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors text-center"
           >
-            <div className="w-12 h-12 bg-[var(--brand-cyan)]/20 rounded-lg flex items-center justify-center text-[var(--brand-cyan)] mb-6">
-              <Target className="w-6 h-6" />
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center text-green-500 mb-6 mx-auto">
+              <Target className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">رؤيتنا</h3>
+            <h3 className="text-2xl font-bold text-white mb-4">الرؤية</h3>
             <p className="text-white/70 leading-relaxed">
-              أن نكون النادي الطلابي الرائد في مجال نظم المعلومات الإدارية على مستوى المملكة، ومصدر إلهام للطلاب في توظيف التقنية لخدمة الإدارة.
+              نتطلع إلى أن نصبح نادٍ رائد في جامعة الملك سعود، من خلال دعم مجتمع فني إداري قادر على المنافسة في سوق العمل، ومواكب لمتطلبات التحول الرقمي.
             </p>
           </motion.div>
 
+          {/* Mission */}
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors"
+            transition={{ delay: 0.1 }}
+            className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors text-center"
           >
-            <div className="w-12 h-12 bg-[var(--brand-blue)]/20 rounded-lg flex items-center justify-center text-[var(--brand-blue)] mb-6">
-              <Briefcase className="w-6 h-6" />
+            <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-500 mb-6 mx-auto">
+              <Briefcase className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">رسالتنا</h3>
+            <h3 className="text-2xl font-bold text-white mb-4">الرسالة</h3>
             <p className="text-white/70 leading-relaxed">
-              تمكين طلاب نظم المعلومات الإدارية من خلال توفير بيئة تعليمية تفاعلية، وربطهم بسوق العمل، وتطوير مهاراتهم التقنية والإدارية.
+              توفير بيئة محفزة وغنية بالمعرفة والفرص، تُسهم في تنمية مهارات المهتمين بنظم المعلومات الإدارية، وذلك عبر المشاركة في الأنشطة، الفعاليات، والتجارب العملية.
+            </p>
+          </motion.div>
+
+          {/* Goal */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors text-center"
+          >
+            <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center text-purple-500 mb-6 mx-auto">
+              <Users className="w-8 h-8" />
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-4">الهدف</h3>
+            <p className="text-white/70 leading-relaxed">
+              نادي طلاب نظم المعلومات الإدارية (MIS) بجامعة الملك سعود، يهدف بشغف إلى تعزيز معرفة الطلاب ومهاراتهم، في الجوانب الأكاديمية والمهنية، وبناء جيل واعٍ تقنيًا وقادر على اتخاذ القرار.
             </p>
           </motion.div>
         </div>
@@ -252,25 +278,19 @@ function VisionMissionSection() {
   );
 }
 
-function EventsPreviewSection() {
-  const events = [
+function ImpactfulActivitiesSection() {
+  const activities = [
     {
-      title: "مستقبل تحليل البيانات",
-      date: "2025-03-15",
+      title: "فعالية 1",
       image: "/MIS1#.png",
-      category: "ورشة عمل"
     },
     {
-      title: "لقاء مع قادة التقنية",
-      date: "2025-03-20",
+      title: "فعالية 2",
       image: "/MIS2#.png",
-      category: "ندوة"
     },
     {
-      title: "هاكاثون الابتكار الرقمي",
-      date: "2025-04-01",
+      title: "فعالية 3",
       image: "/MIS3#.png",
-      category: "مسابقة"
     }
   ];
 
@@ -279,43 +299,32 @@ function EventsPreviewSection() {
       <div className="container">
         <div className="flex justify-between items-end mb-12">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">فعالياتنا القادمة</h2>
-            <p className="text-white/60">انضم إلينا في رحلة التعلم والتطوير</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">أنشطة صنعت الأثر</h2>
+            <p className="text-white/60">لحظات لا تُنسى من مسيرتنا</p>
           </div>
           <Link href="/events">
             <Button variant="outline" className="hidden md:flex border-white/20 text-white hover:bg-white/10">
-              عرض كل الفعاليات <ArrowLeft className="mr-2 h-4 w-4" />
+              عرض كل الأنشطة <ArrowLeft className="mr-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {events.map((event, index) => (
+          {activities.map((activity, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-xl aspect-[4/3]"
+              className="group relative overflow-hidden rounded-xl aspect-[4/3] border border-white/10"
             >
               <img 
-                src={event.image} 
-                alt={event.title} 
+                src={activity.image} 
+                alt={activity.title} 
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-              
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="inline-block px-3 py-1 rounded-full bg-[var(--brand-cyan)] text-black text-xs font-bold mb-3">
-                  {event.category}
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">{event.title}</h3>
-                <div className="flex items-center text-white/70 text-sm">
-                  <Calendar className="w-4 h-4 ml-2" />
-                  {event.date}
-                </div>
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
             </motion.div>
           ))}
         </div>
@@ -323,7 +332,7 @@ function EventsPreviewSection() {
         <div className="mt-8 text-center md:hidden">
           <Link href="/events">
             <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
-              عرض كل الفعاليات <ArrowLeft className="mr-2 h-4 w-4" />
+              عرض كل الأنشطة <ArrowLeft className="mr-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
@@ -333,123 +342,15 @@ function EventsPreviewSection() {
 }
 
 function GameSection() {
-  const [gameState, setGameState] = useState<'start' | 'playing' | 'won'>('start');
-  const [cards, setCards] = useState<any[]>([]);
-  const [flipped, setFlipped] = useState<number[]>([]);
-  const [solved, setSolved] = useState<number[]>([]);
-  const [moves, setMoves] = useState(0);
-
-  const concepts = [
-    { id: 1, icon: Database, label: "SQL" },
-    { id: 2, icon: BarChart, label: "Analytics" },
-    { id: 3, icon: Shield, label: "Security" },
-    { id: 4, icon: Users, label: "HR" },
-    { id: 5, icon: Target, label: "Strategy" },
-    { id: 6, icon: Briefcase, label: "Management" },
-  ];
-
-  const initializeGame = () => {
-    const shuffled = [...concepts, ...concepts]
-      .sort(() => Math.random() - 0.5)
-      .map((item, index) => ({ ...item, uniqueId: index }));
-    setCards(shuffled);
-    setFlipped([]);
-    setSolved([]);
-    setMoves(0);
-    setGameState('playing');
-  };
-
-  const handleCardClick = (index: number) => {
-    if (flipped.length === 2 || flipped.includes(index) || solved.includes(index)) return;
-
-    const newFlipped = [...flipped, index];
-    setFlipped(newFlipped);
-
-    if (newFlipped.length === 2) {
-      setMoves(m => m + 1);
-      const [first, second] = newFlipped;
-      if (cards[first].id === cards[second].id) {
-        setSolved([...solved, first, second]);
-        setFlipped([]);
-        if (solved.length + 2 === cards.length) {
-          setTimeout(() => setGameState('won'), 500);
-        }
-      } else {
-        setTimeout(() => setFlipped([]), 1000);
-      }
-    }
-  };
-
   return (
     <section id="game" className="py-20 bg-[#001835] text-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
       <div className="container relative z-10">
         <div className="max-w-2xl mx-auto mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">لعبة الذاكرة التقنية</h2>
-          <p className="text-white/60">اختبر معلوماتك في مجال نظم المعلومات الإدارية</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">لعبة اصطياد البيانات</h2>
+          <p className="text-white/60">اجمع البيانات الصحيحة وتجنب الفيروسات!</p>
         </div>
-
-        <div className="max-w-4xl mx-auto bg-black/30 rounded-2xl border border-white/10 p-8 backdrop-blur-sm">
-          {gameState === 'start' && (
-            <div className="py-12">
-              <div className="w-20 h-20 bg-[var(--brand-cyan)]/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
-                <Play className="w-10 h-10 text-[var(--brand-cyan)] ml-1" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">جاهز للتحدي؟</h3>
-              <p className="text-white/60 mb-8">طابق المصطلحات التقنية والإدارية في أسرع وقت</p>
-              <Button onClick={initializeGame} size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 font-bold px-8">
-                ابدأ اللعبة
-              </Button>
-            </div>
-          )}
-
-          {gameState === 'playing' && (
-            <div>
-              <div className="flex justify-between items-center mb-6 text-white/60">
-                <span>الحركات: {moves}</span>
-                <Button variant="ghost" size="sm" onClick={initializeGame} className="text-white hover:bg-white/10">
-                  <RotateCcw className="w-4 h-4 ml-2" /> إعادة
-                </Button>
-              </div>
-              <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
-                {cards.map((card, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ rotateY: 0 }}
-                    animate={{ rotateY: flipped.includes(index) || solved.includes(index) ? 180 : 0 }}
-                    className="aspect-square relative cursor-pointer perspective-1000"
-                    onClick={() => handleCardClick(index)}
-                  >
-                    <div className={`w-full h-full transition-all duration-500 transform style-preserve-3d ${flipped.includes(index) || solved.includes(index) ? 'rotate-y-180' : ''}`}>
-                      {/* Front (Hidden) */}
-                      <div className="absolute inset-0 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center backface-hidden">
-                        <HelpCircle className="w-8 h-8 text-white/20" />
-                      </div>
-                      {/* Back (Revealed) */}
-                      <div className={`absolute inset-0 bg-[var(--brand-cyan)] rounded-xl flex flex-col items-center justify-center backface-hidden rotate-y-180 ${solved.includes(index) ? 'opacity-50' : ''}`}>
-                        <card.icon className="w-8 h-8 text-black mb-2" />
-                        <span className="text-black font-bold text-xs">{card.label}</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {gameState === 'won' && (
-            <div className="py-12">
-              <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Shield className="w-10 h-10 text-green-500" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">مبروك!</h3>
-              <p className="text-white/60 mb-8">أنهيت اللعبة في {moves} حركة</p>
-              <Button onClick={initializeGame} size="lg" className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/80 font-bold px-8">
-                العب مرة أخرى
-              </Button>
-            </div>
-          )}
-        </div>
+        
+        <DataCatcherGame />
       </div>
     </section>
   );
@@ -579,7 +480,7 @@ export default function Home() {
       <HeroSection />
       <StatsSection />
       <VisionMissionSection />
-      <EventsPreviewSection />
+      <ImpactfulActivitiesSection />
       <GameSection />
       <FAQSection />
       <BackToTop />
