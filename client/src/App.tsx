@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Join from "./pages/Join";
 import Board from "./pages/Board";
 import Committees from "./pages/Committees";
+import Events from "./pages/Events";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
         <Route path="/join" component={Join} />
       <Route path="/board" component={Board} />
         <Route path="/committees" component={Committees} />
+        <Route path="/events" component={Events} />
         <Route component={NotFound} />
       </Switch>
     </Layout>
