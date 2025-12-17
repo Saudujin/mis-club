@@ -13,28 +13,34 @@ interface GameObject {
 export default function DataCatcherGame() {
   const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
   const [score, setScore] = useState(0);
-  const [basketX, setBasketX] = useState(50); // Percentage 0-100
-  const [objects, setObjects] = useState<GameObject[]>([]);
-  const gameLoopRef = useRef<number>(0);
+  
+  // Refs for game loop and state to avoid re-renders
+  const basketRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const gameLoopRef = useRef<number>(0);
   const lastSpawnTime = useRef(0);
+  const objectsRef = useRef<GameObject[]>([]);
+  const scoreRef = useRef(0);
+  const basketXRef = useRef(50); // Percentage 0-100
 
-  // Handle movement (Mouse/Touch)
-  const handleMove = (clientX: number) => {
-    if (containerRef.current && gameState === 'playing') {
+  // Handle movement (Mouse/Touch) - Direct DOM update for 60fps
+  const updateBasketPosition = (clientX: number) => {
+    if (containerRef.current && basketRef.current && gameState === 'playing') {
       const rect = containerRef.current.getBoundingClientRect();
       const x = clientX - rect.left;
-      const percentage = (x / rect.width) * 100;
-      setBasketX(Math.max(5, Math.min(95, percentage)));
+      const percentage = Math.max(5, Math.min(95, (x / rect.width) * 100));
+      
+      basketXRef.current = percentage;
+      basketRef.current.style.left = `${percentage}%`;
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    handleMove(e.touches[0].clientX);
+    updateBasketPosition(e.touches[0].clientX);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    handleMove(e.clientX);
+    updateBasketPosition(e.clientX);
   };
 
   // Game Loop
@@ -45,49 +51,71 @@ export default function DataCatcherGame() {
       const id = Date.now();
       const type = Math.random() > 0.3 ? 'data' : 'virus'; // 70% data, 30% virus
       const x = Math.random() * 90 + 5; // Random X position 5-95%
-      const speed = Math.random() * 0.5 + 0.5; // Random speed
+      const speed = Math.random() * 0.4 + 0.3; // Slightly slower for better control
 
-      setObjects(prev => [...prev, { id, x, y: -10, type, speed }]);
+      objectsRef.current.push({ id, x, y: -10, type, speed });
     };
 
     const updateGame = (time: number) => {
-      if (time - lastSpawnTime.current > 1000) { // Spawn every 1 second
+      if (time - lastSpawnTime.current > 800) { // Spawn every 0.8 second
         spawnObject();
         lastSpawnTime.current = time;
       }
 
-      setObjects(prev => {
-        const nextObjects: GameObject[] = [];
-        let newScore = score;
-        let gameOver = false;
+      // Update objects
+      const nextObjects: GameObject[] = [];
+      let gameOver = false;
 
-        prev.forEach(obj => {
-          const newY = obj.y + obj.speed;
-          
-          // Check collision with basket (at bottom 10%)
-          if (newY > 85 && newY < 95 && Math.abs(obj.x - basketX) < 10) {
-            if (obj.type === 'data') {
-              newScore += 10;
-            } else {
-              gameOver = true;
-            }
-          } else if (newY < 100) {
-            nextObjects.push({ ...obj, y: newY });
-          }
-        });
-
-        if (gameOver) {
-          setGameState('gameover');
-          return [];
-        }
+      objectsRef.current.forEach(obj => {
+        obj.y += obj.speed;
         
-        if (newScore !== score) setScore(newScore);
-        return nextObjects;
+        // Check collision with basket (at bottom 10%)
+        // Basket is roughly 10% wide, check if object is within range
+        if (obj.y > 85 && obj.y < 95 && Math.abs(obj.x - basketXRef.current) < 8) {
+          if (obj.type === 'data') {
+            scoreRef.current += 10;
+            setScore(scoreRef.current); // Trigger re-render only for score
+          } else {
+            gameOver = true;
+          }
+        } else if (obj.y < 100) {
+          nextObjects.push(obj);
+        }
       });
 
-      if (gameState === 'playing') {
-        gameLoopRef.current = requestAnimationFrame(updateGame);
+      objectsRef.current = nextObjects;
+
+      if (gameOver) {
+        setGameState('gameover');
+        return;
       }
+
+      // Render objects directly to DOM to avoid React reconciliation overhead
+      // This is a hybrid approach: React handles structure, we handle positions
+      // But for simplicity in this component, we'll force a re-render for objects
+      // To make it truly 60fps, we would manipulate DOM nodes directly, but let's try optimized React first
+      // If this is still slow, we switch to Canvas or pure DOM
+      
+      // For now, let's stick to React state for objects but keep basket separate
+      // To optimize, we can use a forceUpdate or just setObjects
+      // But actually, setting state every frame is what kills performance.
+      // Let's try to minimize state updates.
+      
+      // Actually, for 60fps game loop in React, it's better to use a ref for positions 
+      // and only update state for score/gameover.
+      // However, we need to render the objects.
+      // Let's use a requestAnimationFrame loop that updates DOM elements directly if possible,
+      // or just accept React's overhead but optimize the basket.
+      
+      // We already optimized the basket (it doesn't trigger re-renders).
+      // Now let's optimize objects. We will use a forceUpdate-like mechanism 
+      // but only for the objects container.
+      
+      // Actually, let's just use setObjects here. The basket is the most critical part for "feel".
+      // Since basket is now ref-based, it should feel instant.
+      setObjectsState([...objectsRef.current]);
+
+      gameLoopRef.current = requestAnimationFrame(updateGame);
     };
 
     gameLoopRef.current = requestAnimationFrame(updateGame);
@@ -95,19 +123,29 @@ export default function DataCatcherGame() {
     return () => {
       if (gameLoopRef.current) cancelAnimationFrame(gameLoopRef.current);
     };
-  }, [gameState, basketX, score]);
+  }, [gameState]);
+
+  const [objectsState, setObjectsState] = useState<GameObject[]>([]);
 
   const startGame = () => {
+    scoreRef.current = 0;
     setScore(0);
-    setObjects([]);
+    objectsRef.current = [];
+    setObjectsState([]);
     setGameState('playing');
     lastSpawnTime.current = performance.now();
+    
+    // Reset basket
+    basketXRef.current = 50;
+    if (basketRef.current) {
+      basketRef.current.style.left = '50%';
+    }
   };
 
   return (
     <div 
       ref={containerRef}
-      className="relative w-full max-w-2xl mx-auto h-[400px] bg-[#001835] rounded-xl border border-white/10 overflow-hidden touch-none select-none"
+      className="relative w-full max-w-2xl mx-auto h-[400px] bg-[#001835] rounded-xl border border-white/10 overflow-hidden touch-none select-none cursor-crosshair"
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
     >
@@ -146,10 +184,10 @@ export default function DataCatcherGame() {
       </div>
 
       {/* Falling Objects */}
-      {objects.map(obj => (
+      {objectsState.map(obj => (
         <div
           key={obj.id}
-          className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-transform"
+          className="absolute transform -translate-x-1/2 -translate-y-1/2 will-change-transform"
           style={{ 
             left: `${obj.x}%`, 
             top: `${obj.y}%`,
@@ -167,10 +205,11 @@ export default function DataCatcherGame() {
         </div>
       ))}
 
-      {/* Player Basket */}
+      {/* Player Basket - Ref based for 60fps */}
       <div 
-        className="absolute bottom-4 transform -translate-x-1/2 transition-all duration-75 ease-out"
-        style={{ left: `${basketX}%` }}
+        ref={basketRef}
+        className="absolute bottom-4 transform -translate-x-1/2 transition-none will-change-transform"
+        style={{ left: '50%' }}
       >
         <div className="w-16 h-12 bg-[var(--brand-blue)] rounded-b-xl border-2 border-[var(--brand-cyan)] flex items-center justify-center relative shadow-[0_0_15px_rgba(0,229,255,0.3)]">
           <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-20 h-6 bg-[var(--brand-cyan)]/10 rounded-t-full border-t-2 border-x-2 border-[var(--brand-cyan)]/50" />

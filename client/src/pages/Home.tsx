@@ -304,7 +304,7 @@ function ImpactfulActivitiesSection() {
           </div>
           <Link href="/events">
             <Button variant="outline" className="hidden md:flex border-white/20 text-white hover:bg-white/10">
-              عرض كل الأنشطة <ArrowLeft className="mr-2 h-4 w-4" />
+              سجل معنا بالانشطة القادمة <ArrowLeft className="mr-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
@@ -332,7 +332,7 @@ function ImpactfulActivitiesSection() {
         <div className="mt-8 text-center md:hidden">
           <Link href="/events">
             <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
-              عرض كل الأنشطة <ArrowLeft className="mr-2 h-4 w-4" />
+              سجل معنا بالانشطة القادمة <ArrowLeft className="mr-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
