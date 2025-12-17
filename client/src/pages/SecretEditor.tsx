@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Save, Github, Lock, Trash2, Edit, Plus, RefreshCw, Bold, Italic, List, ListOrdered, Quote, AlignRight, AlignCenter, AlignLeft, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
+import { Loader2, Save, Github, Lock, Trash2, Edit, Plus, RefreshCw, Bold, Italic, List, ListOrdered, Quote, AlignRight, AlignCenter, AlignLeft, Image as ImageIcon, Link as LinkIcon, Minus } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -90,6 +90,14 @@ const MenuBar = ({ editor }: { editor: any }) => {
       <Button
         variant="ghost"
         size="sm"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        className={editor.isActive('heading', { level: 1 }) ? 'bg-white/10' : ''}
+      >
+        H1
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={editor.isActive('heading', { level: 2 }) ? 'bg-white/10' : ''}
       >
@@ -126,6 +134,13 @@ const MenuBar = ({ editor }: { editor: any }) => {
         className={editor.isActive('blockquote') ? 'bg-white/10' : ''}
       >
         <Quote className="w-4 h-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setHorizontalRule().run()}
+      >
+        <Minus className="w-4 h-4" />
       </Button>
       <Button
         variant="ghost"
