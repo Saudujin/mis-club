@@ -82,7 +82,8 @@ export default function Blog() {
               >
                 <Link href={`/blog/${post.id}`}>
                   <Card className="h-full bg-card/50 backdrop-blur-sm border-white/10 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group cursor-pointer overflow-hidden flex flex-col">
-                    <div className="relative h-48 overflow-hidden">
+                    {/* Enforce 16:9 Aspect Ratio */}
+                    <div className="w-full aspect-video relative overflow-hidden bg-black/20">
                       <img 
                         src={post.image} 
                         alt={post.title} 
