@@ -81,34 +81,14 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative hidden lg:block"
           >
-            {/* Abstract 3D Representation */}
-            <div className="relative w-full aspect-square">
+            {/* Performance Indicator Card - Main Visual */}
+            <div className="relative w-full aspect-square flex items-center justify-center">
               <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand-blue)]/20 to-[var(--brand-cyan)]/20 rounded-full blur-3xl" />
-              {/* Abstract Visualization using CSS/SVG instead of missing image */}
-              <div className="relative z-10 w-full h-full flex items-center justify-center">
-                <div className="relative w-64 h-64">
-                  <div className="absolute inset-0 border-2 border-[var(--brand-cyan)]/30 rounded-full animate-[spin_10s_linear_infinite]" />
-                  <div className="absolute inset-4 border-2 border-[var(--brand-blue)]/30 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
-                  <div className="absolute inset-8 border-2 border-white/10 rounded-full animate-[spin_20s_linear_infinite]" />
-                  
-                  {/* Central Logo/Icon */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-32 h-32 bg-gradient-to-br from-[var(--brand-blue)] to-[var(--brand-cyan)] rounded-2xl rotate-45 flex items-center justify-center shadow-[0_0_50px_rgba(0,255,255,0.3)]">
-                      <div className="-rotate-45 text-white font-bold text-4xl tracking-tighter">MIS</div>
-                    </div>
-                  </div>
-
-                  {/* Orbiting Elements */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-3 w-6 h-6 bg-[var(--brand-cyan)] rounded-full blur-sm animate-pulse" />
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-3 w-4 h-4 bg-[var(--brand-blue)] rounded-full blur-sm animate-pulse delay-700" />
-                </div>
-              </div>
               
-              {/* Floating Cards - Hidden on mobile */}
               <motion.div 
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-10 -left-10 bg-[#001835]/90 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-xl max-w-xs hidden md:block"
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="relative z-10 bg-[#001835]/90 backdrop-blur-md p-8 rounded-3xl border border-white/10 shadow-2xl w-full max-w-md"
               >
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm text-white/60">مؤشر الأداء</span>
