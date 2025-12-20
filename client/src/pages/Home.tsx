@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, MapPin, Users, Target, Lightbulb, Rocket, ChevronRight, ChevronLeft } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import DataCatcherGame from "@/components/DataCatcherGame";
 
@@ -195,6 +195,9 @@ export default function Home() {
 
       {/* Game Section */}
       <GameSection />
+
+      {/* FAQ Section */}
+      <FAQSection />
 
       {/* Latest Blog Posts Section */}
       <section className="py-20 bg-[#000B18]">
@@ -403,6 +406,79 @@ function GameSection() {
         </div>
         
         <DataCatcherGame />
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  const faqs = [
+    {
+      question: "كيف يمكنني الانضمام للنادي؟",
+      answer: "يمكنك الانضمام للنادي من خلال تعبئة نموذج التسجيل المتاح في صفحة 'انضم إلينا' خلال فترات التسجيل المعلنة بداية كل فصل دراسي."
+    },
+    {
+      question: "هل يشترط أن أكون طالب نظم معلومات إدارية؟",
+      answer: "الأولوية لطلاب التخصص، ولكن نرحب بجميع الطلاب الشغوفين بالتقنية والإدارة من مختلف التخصصات في جامعة الملك سعود."
+    },
+    {
+      question: "ما هي اللجان المتاحة في النادي؟",
+      answer: "يضم النادي عدة لجان منها: اللجنة الإعلامية، لجنة التنظيم، لجنة المحتوى، واللجنة التقنية. يمكنك اختيار اللجنة التي تناسب مهاراتك."
+    },
+    {
+      question: "هل توجد شهادات للمشاركة في الفعاليات؟",
+      answer: "نعم، يتم منح شهادات حضور للمشاركين في معظم الدورات وورش العمل التي يقيمها النادي، وتعتمد عبر السجل المهاري."
+    }
+  ];
+
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  return (
+    <section className="py-20 bg-[#000B18] relative overflow-hidden">
+      <div className="container max-w-4xl relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">الأسئلة الشائعة</h2>
+          <p className="text-white/60">إجابات على استفساراتكم المتكررة</p>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="border border-white/10 rounded-2xl overflow-hidden bg-[#001835]/50 backdrop-blur-sm"
+            >
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full flex items-center justify-between p-6 text-right hover:bg-white/5 transition-colors"
+              >
+                <span className="font-bold text-lg text-white">{faq.question}</span>
+                <ChevronLeft 
+                  className={`w-5 h-5 text-[var(--brand-cyan)] transition-transform duration-300 ${
+                    openIndex === index ? "-rotate-90" : ""
+                  }`} 
+                />
+              </button>
+              <AnimatePresence>
+                {openIndex === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="px-6 pb-6 text-white/70 leading-relaxed border-t border-white/5 pt-4">
+                      {faq.answer}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
