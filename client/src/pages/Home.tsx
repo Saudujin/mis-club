@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import DataCatcherGame from "@/components/DataCatcherGame";
 
 // Mock data for blog posts (in a real app, this would come from an API or CMS)
-import postsData from "../../public/posts.json";
+const postsData: any[] = []; // Placeholder until posts.json is created
 
 export default function Home() {
   const [posts, setPosts] = useState<any[]>([]);
