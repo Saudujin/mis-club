@@ -6,20 +6,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import DataCatcherGame from "@/components/DataCatcherGame";
 
-// Mock data for blog posts (in a real app, this would come from an API or CMS)
-const postsData: any[] = []; // Placeholder until posts.json is created
-
 export default function Home() {
   const [posts, setPosts] = useState<any[]>([]);
 
   useEffect(() => {
     // Load posts from local JSON
-    // Sort by date (newest first) and take top 3
-    const sortedPosts = [...postsData].sort((a, b) => 
-      new Date(b.date).getTime() - new Date(a.date).getTime()
-    ).slice(0, 3);
-    
-    setPosts(sortedPosts);
+    fetch("/posts.json")
+      .then((res) => res.json())
+      .then((data) => {
+        // Sort by date (newest first) and take top 5 for horizontal scroll
+        const sortedPosts = [...data].sort((a: any, b: any) => 
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        ).slice(0, 5);
+        setPosts(sortedPosts);
+      })
+      .catch((err) => console.error("Failed to load posts", err));
   }, []);
 
   return (
@@ -214,77 +215,50 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Desktop Grid */}
-          <div className="hidden md:grid md:grid-cols-3 gap-8">
-            {posts.map((post, index) => (
-              <Link key={post.id} href={`/blog/${post.id}`}>
-                <motion.div 
-                  whileHover={{ y: -5 }}
-                  className="group cursor-pointer h-full flex flex-col bg-[#001835] rounded-2xl overflow-hidden border border-white/10 hover:border-[var(--brand-cyan)]/50 transition-all"
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <img 
-                      src={post.image} 
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-white border border-white/10">
-                      {post.category}
+          {/* Horizontal Scroll for All Screens */}
+          <div className="flex overflow-x-auto gap-6 pb-8 -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory scrollbar-hide">
+            {posts.length > 0 ? (
+              posts.map((post, index) => (
+                <Link key={post.id} href={`/blog/${post.id}`}>
+                  <motion.div 
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="snap-center shrink-0 w-[85vw] md:w-[400px] flex flex-col bg-[#001835] rounded-2xl overflow-hidden border border-white/10 hover:border-[var(--brand-cyan)]/50 transition-all group cursor-pointer h-full"
+                  >
+                    <div className="aspect-video relative overflow-hidden">
+                      <img 
+                        src={post.image} 
+                        alt={post.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-white border border-white/10">
+                        {post.category || "مقال"}
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="flex items-center gap-2 text-sm text-white/40 mb-3">
-                      <Calendar className="w-4 h-4" />
-                      <span>{post.date}</span>
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="flex items-center gap-2 text-sm text-white/40 mb-3">
+                        <Calendar className="w-4 h-4" />
+                        <span>{post.date}</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[var(--brand-cyan)] transition-colors line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-white/60 text-sm line-clamp-3 mb-4 flex-grow">
+                        {post.excerpt}
+                      </p>
+                      <div className="flex items-center text-[var(--brand-cyan)] text-sm font-medium mt-auto">
+                        اقرأ المزيد <ArrowLeft className="mr-2 w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[var(--brand-cyan)] transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-white/60 text-sm line-clamp-3 mb-4 flex-grow">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center text-[var(--brand-cyan)] text-sm font-medium mt-auto">
-                      اقرأ المزيد <ArrowLeft className="mr-2 w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                    </div>
-                  </div>
-                </motion.div>
-              </Link>
-            ))}
-          </div>
-
-          {/* Mobile Carousel (Horizontal Scroll) */}
-          <div className="md:hidden flex overflow-x-auto gap-4 pb-6 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
-            {posts.map((post, index) => (
-              <Link key={post.id} href={`/blog/${post.id}`}>
-                <div className="snap-center shrink-0 w-[85vw] flex flex-col h-full bg-[#001835] rounded-2xl overflow-hidden border border-white/10">
-                  <div className="aspect-video relative overflow-hidden">
-                    <img 
-                      src={post.image} 
-                      alt={post.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-white border border-white/10">
-                      {post.category}
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="flex items-center gap-2 text-sm text-white/40 mb-3">
-                      <Calendar className="w-4 h-4" />
-                      <span>{post.date}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-white/60 text-sm line-clamp-3 mb-4 flex-grow">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center text-[var(--brand-cyan)] text-sm font-medium mt-auto">
-                      اقرأ المزيد <ArrowLeft className="mr-2 w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                  </motion.div>
+                </Link>
+              ))
+            ) : (
+              <div className="w-full text-center py-12 text-white/40">
+                جاري تحميل المقالات...
+              </div>
+            )}
           </div>
 
           <div className="mt-8 text-center md:hidden">
@@ -423,11 +397,11 @@ function FAQSection() {
     },
     {
       question: "ما هي اللجان المتاحة في النادي؟",
-      answer: "يضم النادي عدة لجان منها: اللجنة الإعلامية، لجنة التنظيم، لجنة المحتوى، واللجنة التقنية. يمكنك اختيار اللجنة التي تناسب مهاراتك."
+      answer: "يضم النادي عدة لجان منها: لجنة اللوجستيات، لجنة الموارد البشرية، لجنة العلاقات، لجنة الإعلام، واللجنة الإدارية والمالية. يمكنك اختيار اللجنة التي تناسب مهاراتك."
     },
     {
       question: "هل توجد شهادات للمشاركة في الفعاليات؟",
-      answer: "نعم، يتم منح شهادات حضور للمشاركين في معظم الدورات وورش العمل التي يقيمها النادي، وتعتمد عبر السجل المهاري."
+      answer: "نعم، يتم منح شهادات حضور للمشاركين في معظم الدورات وورش العمل التي يقيمها النادي."
     }
   ];
 
