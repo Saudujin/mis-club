@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, MapPin, Clock, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -75,6 +76,12 @@ export default function Events() {
 
   return (
     <div className="min-h-screen pt-24 pb-12 relative overflow-hidden">
+      <Helmet>
+        <title>الفعاليات | نادي نظم المعلومات الإدارية</title>
+        <meta name="description" content="تصفح أحدث الفعاليات وورش العمل التي يقيمها نادي نظم المعلومات الإدارية بجامعة الملك سعود. انضم إلينا لتطوير مهاراتك وبناء شبكة علاقاتك المهنية." />
+        <meta name="keywords" content="فعاليات النادي, ورش عمل, دورات تدريبية, لقاءات تقنية, أنشطة طلابية, جامعة الملك سعود" />
+        <link rel="canonical" href="https://misclubksu.com/events" />
+      </Helmet>
       <SEO 
         title="الفعاليات" 
         description="تصفح أحدث الفعاليات وورش العمل التي يقيمها نادي نظم المعلومات الإدارية بجامعة الملك سعود."

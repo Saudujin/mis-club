@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Calendar, User, ArrowRight, Loader2 } from "lucide-react";
@@ -36,6 +37,12 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen pt-24 pb-12 relative overflow-hidden">
+      <Helmet>
+        <title>المدونة | نادي نظم المعلومات الإدارية</title>
+        <meta name="description" content="اقرأ أحدث المقالات والأخبار في مجال نظم المعلومات الإدارية، التقنية، وإدارة الأعمال. محتوى يكتبه طلاب وأعضاء النادي لتبادل المعرفة والخبرات." />
+        <meta name="keywords" content="مدونة تقنية, مقالات نظم معلومات, أخبار النادي, مقالات طلابية, جامعة الملك سعود" />
+        <link rel="canonical" href="https://misclubksu.com/blog" />
+      </Helmet>
       <SEO 
         title="المدونة" 
         description="مقالات وأخبار تقنية وإدارية من كتابة أعضاء نادي نظم المعلومات الإدارية."

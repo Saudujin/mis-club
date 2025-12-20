@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -170,6 +171,12 @@ export default function Join() {
 
   return (
     <div className="min-h-screen pt-24 pb-12 relative overflow-hidden">
+      <Helmet>
+        <title>انضم إلينا | نادي نظم المعلومات الإدارية</title>
+        <meta name="description" content="انضم الآن إلى نادي نظم المعلومات الإدارية بجامعة الملك سعود. كن جزءاً من مجتمعنا وساهم في بناء المستقبل من خلال اللجان المختلفة: الإعلام، العلاقات العامة، الموارد البشرية، اللوجستيات، والمالية." />
+        <meta name="keywords" content="تسجيل نادي نظم المعلومات, عضوية النادي, لجان النادي, التطوع الطلابي, جامعة الملك سعود" />
+        <link rel="canonical" href="https://misclubksu.com/join" />
+      </Helmet>
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
         <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px]" />

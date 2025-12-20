@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -58,6 +59,12 @@ const committees = [
 export default function Committees() {
   return (
     <div className="container py-20 space-y-12">
+      <Helmet>
+        <title>لجان النادي | نادي نظم المعلومات الإدارية</title>
+        <meta name="description" content="استكشف لجان نادي نظم المعلومات الإدارية: اللوجستيات، الموارد البشرية، العلاقات العامة، الإعلام، واللجنة الإدارية والمالية. تعرف على دور كل لجنة في تحقيق أهداف النادي." />
+        <meta name="keywords" content="لجان النادي, اللوجستيات, الموارد البشرية, العلاقات العامة, الإعلام, اللجنة المالية, تنظيم الفعاليات" />
+        <link rel="canonical" href="https://misclubksu.com/committees" />
+      </Helmet>
       <div className="text-center space-y-4">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}

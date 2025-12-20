@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -99,6 +100,12 @@ export default function Board() {
 
   return (
     <div className="min-h-screen pt-24 pb-20 overflow-x-hidden">
+      <Helmet>
+        <title>الهيكل التنظيمي | نادي نظم المعلومات الإدارية</title>
+        <meta name="description" content="تعرف على الهيكل التنظيمي لنادي نظم المعلومات الإدارية بجامعة الملك سعود. يضم النادي لجان متخصصة تشمل الموارد البشرية، العلاقات العامة، اللوجستيات، الإعلام، واللجنة الإدارية والمالية." />
+        <meta name="keywords" content="هيكل النادي, إدارة النادي, لجان النادي, أعضاء النادي, قيادة النادي" />
+        <link rel="canonical" href="https://misclubksu.com/board" />
+      </Helmet>
       <div className="container max-w-6xl">
         
         {/* Header */}

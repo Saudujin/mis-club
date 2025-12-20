@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, MapPin, Users, Target, Lightbulb, Rocket, ChevronRight, ChevronLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 import DataCatcherGame from "@/components/DataCatcherGame";
 
 // Mock data for blog posts (in a real app, this would come from an API or CMS)
@@ -23,6 +24,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#000B18] text-white font-sans" dir="rtl">
+      <Helmet>
+        <title>نادي نظم المعلومات الإدارية | جامعة الملك سعود</title>
+        <meta name="description" content="نادي نظم المعلومات الإدارية (MIS Club) بجامعة الملك سعود. مجتمع طلابي يهدف لتطوير مهارات الطلاب في مجال نظم المعلومات الإدارية، تحليل البيانات، وإدارة المشاريع التقنية." />
+        <meta name="keywords" content="نظم معلومات ادارية, نادي جامعة الملك سعود, نادي نظم معلومات الادارية, نادي النظم, نظم معلومات, نادي طلابي, إدارة الأعمال, سوق العمل, تخصص نظم المعلومات الإدارية" />
+        <link rel="canonical" href="https://misclubksu.com/" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         {/* Background Elements */}
@@ -53,7 +60,7 @@ export default function Home() {
             </h1>
             
             <p className="text-xl text-white/60 mb-8 max-w-xl leading-relaxed">
-              في عالم يعتمد على السرعة والدقة، نظم المعلومات الإدارية هي الجسر بين التقنية والإدارة، ونحن في نادي MIS نصنع هذا الجسر.
+              في عالم يعتمد على السرعة والدقة، تخصص نظم المعلومات الإدارية هو الجسر بين التقنية وإدارة الأعمال. نحن في نادي نظم المعلومات الإدارية بجامعة الملك سعود نصنع هذا الجسر لتأهيل الطلاب لسوق العمل السعودي.
             </p>
             
             <div className="flex flex-wrap gap-4">
@@ -148,7 +155,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold text-white mb-4">الرؤية</h3>
               <p className="text-white/70 leading-relaxed">
-                نتطلع إلى أن نصبح نادٍ رائد في جامعة الملك سعود، من خلال دعم مجتمع فني إداري قادر على المنافسة في سوق العمل، ومواكب لمتطلبات التحول الرقمي.
+                نتطلع إلى أن نصبح النادي الطلابي الرائد في جامعة الملك سعود، من خلال دعم مجتمع فني إداري قادر على المنافسة في سوق العمل السعودي، ومواكب لمتطلبات التحول الرقمي في المملكة العربية السعودية.
               </p>
             </motion.div>
 
@@ -176,7 +183,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold text-white mb-4">الهدف</h3>
               <p className="text-white/70 leading-relaxed">
-                نادي طلاب نظم المعلومات الإدارية (MIS) بجامعة الملك سعود، يهدف بشغف إلى تعزيز معرفة الطلاب ومهاراتهم، في الجوانب الأكاديمية والمهنية، وبناء جيل واعٍ تقنيًا وقادر على اتخاذ القرار.
+                نادي طلاب نظم المعلومات الإدارية (MIS) بجامعة الملك سعود، يهدف بشغف إلى تعزيز معرفة الطلاب ومهاراتهم في مجال نظم المعلومات، في الجوانب الأكاديمية والمهنية، وبناء جيل واعٍ تقنيًا وقادر على اتخاذ القرار وقيادة المستقبل.
               </p>
             </motion.div>
           </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { useRoute, Link } from "wouter";
 import { motion } from "framer-motion";
 import { Calendar, User, ArrowRight, Share2, Loader2 } from "lucide-react";
@@ -57,6 +58,18 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen pt-24 pb-12 relative">
+      {post && (
+        <Helmet>
+          <title>{post.title} | مدونة نادي نظم المعلومات الإدارية</title>
+          <meta name="description" content={post.excerpt} />
+          <meta name="keywords" content={`مدونة, مقال, ${post.title}, نظم معلومات, جامعة الملك سعود`} />
+          <meta property="og:title" content={post.title} />
+          <meta property="og:description" content={post.excerpt} />
+          <meta property="og:image" content={post.image} />
+          <meta property="og:type" content="article" />
+          <link rel="canonical" href={`https://misclubksu.com/blog/${post.id}`} />
+        </Helmet>
+      )}
       <SEO 
         title={post.title}
         description={post.excerpt}
