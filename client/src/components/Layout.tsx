@@ -117,7 +117,7 @@ export function Navbar() {
       )}
       
       {/* Scroll Progress Bar */}
-      <div className="absolute bottom-0 left-0 h-[2px] bg-[var(--brand-cyan)] transition-all duration-100 ease-out z-50" style={{ width: `${scrollProgress * 100}%` }} />
+      <div className="absolute bottom-0 right-0 h-[2px] bg-[var(--brand-cyan)] transition-all duration-100 ease-out z-50" style={{ width: `${scrollProgress * 100}%` }} />
     </nav>
   );
 }

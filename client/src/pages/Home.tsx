@@ -68,7 +68,7 @@ export default function Home() {
               <Button 
                 size="lg" 
                 className="bg-[var(--brand-cyan)] text-black hover:bg-[var(--brand-cyan)]/90 font-bold text-lg px-8 h-14"
-                onClick={() => document.getElementById('game')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => window.location.href = '/join'}
               >
                 ابدأ التجربة <ArrowLeft className="mr-2 h-5 w-5" />
               </Button>
